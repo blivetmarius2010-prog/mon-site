@@ -9,24 +9,28 @@
 <meta name="theme-color" content="#020617">
 
 <style>
+/* ===== RESET ===== */
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
 
+/* ===== BACKGROUND ===== */
 body {
   min-height: 100vh;
-  font-family: "Segoe UI", system-ui, sans-serif;
+  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
   color: white;
+
   background:
-    radial-gradient(circle at top, rgba(56,189,248,0.15), transparent 40%),
-    radial-gradient(circle at bottom, rgba(129,140,248,0.2), transparent 40%),
+    radial-gradient(circle at 20% 10%, rgba(56,189,248,0.18), transparent 40%),
+    radial-gradient(circle at 80% 90%, rgba(129,140,248,0.22), transparent 45%),
     linear-gradient(180deg, #020617, #020617);
+
   display: flex;
   justify-content: center;
   align-items: center;
-  transition: 0.4s;
+  transition: background 0.4s, color 0.4s;
 }
 
 body.light {
@@ -36,80 +40,154 @@ body.light {
     linear-gradient(180deg, #f8fafc, #e5e7eb);
 }
 
+/* ===== MAIN CARD ===== */
 .app {
   width: 380px;
-  padding: 28px;
-  border-radius: 28px;
-  background: rgba(255,255,255,0.12);
-  backdrop-filter: blur(20px);
-  box-shadow: 0 30px 80px rgba(0,0,0,0.6);
+  padding: 26px;
+  border-radius: 30px;
+
+  background: linear-gradient(
+    180deg,
+    rgba(255,255,255,0.16),
+    rgba(255,255,255,0.06)
+  );
+
+  backdrop-filter: blur(22px);
+  box-shadow:
+    0 40px 90px rgba(0,0,0,0.65),
+    inset 0 1px 1px rgba(255,255,255,0.3);
+
+  animation: appear 0.9s ease;
 }
 
-h1 {
+@keyframes appear {
+  from {
+    opacity: 0;
+    transform: translateY(40px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* ===== HEADER ===== */
+header {
   text-align: center;
-  margin-bottom: 25px;
+  margin-bottom: 22px;
 }
 
+header h1 {
+  font-size: 2em;
+  letter-spacing: 0.5px;
+}
+
+header p {
+  opacity: 0.8;
+  font-size: 0.95em;
+}
+
+/* ===== SECTIONS ===== */
 section {
-  margin-top: 25px;
+  margin-top: 22px;
+  padding: 16px;
+  border-radius: 20px;
+  background: rgba(0,0,0,0.28);
 }
 
-h2 {
-  margin-bottom: 12px;
+body.light section {
+  background: rgba(255,255,255,0.7);
 }
 
-input, select {
-  width: 100%;
-  padding: 12px;
-  border-radius: 14px;
-  border: none;
+/* ===== TITLES ===== */
+section h2 {
+  font-size: 1.15em;
   margin-bottom: 10px;
 }
 
+/* ===== INPUTS ===== */
+input, select {
+  width: 100%;
+  padding: 13px;
+  border-radius: 14px;
+  border: none;
+  outline: none;
+  margin-bottom: 10px;
+  font-size: 1em;
+}
+
+/* ===== BUTTONS ===== */
 button {
   width: 100%;
-  padding: 12px;
+  padding: 13px;
   border-radius: 14px;
   border: none;
   font-weight: bold;
   cursor: pointer;
+
   background: linear-gradient(135deg, #38bdf8, #818cf8);
   color: #020617;
-  margin-bottom: 10px;
+
+  transition: transform 0.15s, box-shadow 0.15s;
 }
 
+button:hover {
+  transform: scale(1.04);
+  box-shadow: 0 14px 35px rgba(56,189,248,0.55);
+}
+
+button:active {
+  transform: scale(0.98);
+}
+
+/* ===== LISTS ===== */
 ul {
   list-style: none;
+  margin-top: 8px;
 }
 
 li {
   background: rgba(0,0,0,0.35);
-  padding: 12px;
-  margin-bottom: 10px;
+  padding: 13px 14px;
+  margin-bottom: 8px;
   border-radius: 14px;
+
   display: flex;
   justify-content: space-between;
   align-items: center;
-}
 
-.delete-btn {
-  background: rgba(239,68,68,0.85);
-  border: none;
-  color: white;
-  border-radius: 50%;
-  width: 26px;
-  height: 26px;
   cursor: pointer;
+  animation: pop 0.25s ease;
 }
 
+li span {
+  opacity: 0.6;
+  font-size: 0.9em;
+}
+
+li:hover {
+  background: rgba(0,0,0,0.55);
+}
+
+@keyframes pop {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* ===== STATS ===== */
 .stats {
   margin-top: 10px;
-  background: rgba(0,0,0,0.25);
   padding: 12px;
   border-radius: 14px;
+  background: rgba(0,0,0,0.3);
   font-size: 0.95em;
 }
 
+.stats p {
+  margin: 4px 0;
+}
+
+/* ===== THEME BUTTON ===== */
 .theme-btn {
   position: fixed;
   top: 16px;
@@ -118,11 +196,12 @@ li {
   height: 44px;
   border-radius: 50%;
   border: none;
-  background: rgba(255,255,255,0.25);
   font-size: 18px;
+  background: rgba(255,255,255,0.25);
   cursor: pointer;
 }
 
+/* ===== MOBILE ===== */
 @media (max-width: 500px) {
   .app {
     width: 92%;
@@ -137,9 +216,11 @@ li {
 
 <div class="app">
 
-<h1>🎓 Student Hub</h1>
+<header>
+  <h1>🎓 Student Hub</h1>
+  <p>Organisation • Notes • Progression</p>
+</header>
 
-<!-- TO DO LIST -->
 <section>
   <h2>📝 Tâches</h2>
   <input id="taskInput" placeholder="Nouvelle tâche">
@@ -147,7 +228,6 @@ li {
   <ul id="tasks"></ul>
 </section>
 
-<!-- MATIÈRES -->
 <section>
   <h2>📚 Matières</h2>
   <input id="subjectInput" placeholder="Nom de la matière">
@@ -155,16 +235,14 @@ li {
   <ul id="subjects"></ul>
 </section>
 
-<!-- NOTES -->
 <section>
   <h2>📊 Notes</h2>
-
   <select id="subjectSelect"></select>
-
-  <input id="noteInput" type="number" min="1" max="6" step="0.1" placeholder="Note (1 à 6)">
+  <input id="noteInput" type="number" min="1" max="6" placeholder="Note (1 à 6)">
   <button onclick="addNote()">Ajouter la note</button>
 
   <div class="stats">
+    <p>📌 Nombre : <strong id="count">0</strong></p>
     <p>📈 Moyenne : <strong id="avg">-</strong></p>
     <p>⬆️ Max : <strong id="max">-</strong></p>
     <p>⬇️ Min : <strong id="min">-</strong></p>
@@ -176,148 +254,104 @@ li {
 <script>
 let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
 let subjects = JSON.parse(localStorage.getItem("subjects")) || {};
+let theme = localStorage.getItem("theme");
 
 const taskList = document.getElementById("tasks");
 const subjectList = document.getElementById("subjects");
 const subjectSelect = document.getElementById("subjectSelect");
 
-tasks.forEach(createTask);
-updateSubjectsUI();
+tasks.forEach(t => createTask(t));
+Object.keys(subjects).forEach(s => createSubject(s));
+updateSelect();
+
+function addTask() {
+  let input = taskInput;
+  if (!input.value) return;
+  tasks.push(input.value);
+  save();
+  createTask(input.value);
+  input.value = "";
+}
+
+function createTask(text) {
+  let li = document.createElement("li");
+  li.innerHTML = `${text} <span>✖</span>`;
+  li.onclick = () => {
+    tasks = tasks.filter(t => t !== text);
+    save();
+    li.remove();
+  };
+  taskList.appendChild(li);
+}
+
+function addSubject() {
+  let name = subjectInput.value;
+  if (!name || subjects[name]) return;
+  subjects[name] = [];
+  save();
+  createSubject(name);
+  updateSelect();
+  subjectInput.value = "";
+}
+
+function createSubject(name) {
+  let li = document.createElement("li");
+  li.innerHTML = `${name} <span>✖</span>`;
+  li.onclick = () => {
+    delete subjects[name];
+    save();
+    li.remove();
+    updateSelect();
+    updateStats();
+  };
+  subjectList.appendChild(li);
+}
+
+function updateSelect() {
+  subjectSelect.innerHTML = "";
+  Object.keys(subjects).forEach(s => {
+    let opt = document.createElement("option");
+    opt.value = s;
+    opt.textContent = s;
+    subjectSelect.appendChild(opt);
+  });
+}
+
+function addNote() {
+  let s = subjectSelect.value;
+  let n = Number(noteInput.value);
+  if (!s || n < 1 || n > 6) return;
+  subjects[s].push(n);
+  save();
+  updateStats();
+  noteInput.value = "";
+}
+
+function updateStats() {
+  let s = subjectSelect.value;
+  if (!s || subjects[s].length === 0) {
+    count.textContent = avg.textContent = max.textContent = min.textContent = "-";
+    return;
+  }
+  let arr = subjects[s];
+  count.textContent = arr.length;
+  avg.textContent = (arr.reduce((a,b)=>a+b,0)/arr.length).toFixed(2);
+  max.textContent = Math.max(...arr);
+  min.textContent = Math.min(...arr);
+}
 
 function save() {
   localStorage.setItem("tasks", JSON.stringify(tasks));
   localStorage.setItem("subjects", JSON.stringify(subjects));
 }
 
-/* TASKS */
-function addTask() {
-  let input = taskInput.value;
-  if (!input) return;
-  tasks.push(input);
-  createTask(input);
-  save();
-  taskInput.value = "";
-}
-
-function createTask(text) {
-  let li = document.createElement("li");
-  li.textContent = text;
-  li.onclick = () => {
-    tasks = tasks.filter(t => t !== text);
-    li.remove();
-    save();
-  };
-  taskList.appendChild(li);
-}
-
-/* SUBJECTS */
-function addSubject() {
-  let name = subjectInput.value;
-  if (!name || subjects[name]) return;
-  subjects[name] = [];
-  subjectInput.value = "";
-  save();
-  updateSubjectsUI();
-}
-
-function deleteSubject(name) {
-  delete subjects[name];
-  save();
-  updateSubjectsUI();
-}
-
-function updateSubjectsUI() {
-  subjectList.innerHTML = "";
-  subjectSelect.innerHTML = "";
-
-  for (let name in subjects) {
-    let li = document.createElement("li");
-    li.innerHTML = `<span>${name}</span>
-      <button class="delete-btn" onclick="deleteSubject('${name}')">✕</button>`;
-    subjectList.appendChild(li);
-
-    let option = document.createElement("option");
-    option.value = name;
-    option.textContent = name;
-    subjectSelect.appendChild(option);
-  }
-
-  updateStats();
-}
-
-/* NOTES */
-function addNote() {
-  let subject = subjectSelect.value;
-  let n = Number(noteInput.value);
-  if (!subject || n < 1 || n > 6) return;
-  subjects[subject].push(n);
-  noteInput.value = "";
-  save();
-  updateStats();
-}
-
-function updateStats() {
-  let subject = subjectSelect.value;
-  if (!subject || subjects[subject].length === 0) {
-    avg.textContent = max.textContent = min.textContent = "-";
-    return;
-  }
-
-  let arr = subjects[subject];
-  let sum = arr.reduce((a,b)=>a+b,0);
-  avg.textContent = (sum / arr.length).toFixed(2);
-  max.textContent = Math.max(...arr);
-  min.textContent = Math.min(...arr);
-}
-
-/* THEME */
 function toggleTheme() {
   document.body.classList.toggle("light");
-  localStorage.setItem("theme",
-    document.body.classList.contains("light") ? "light" : "dark");
+  localStorage.setItem("theme", document.body.classList.contains("light") ? "light" : "dark");
 }
 
-if (localStorage.getItem("theme") === "light") {
-  document.body.classList.add("light");
-}
-
-/* PWA */
-if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("sw.js");
-}
+if (theme === "light") document.body.classList.add("light");
 </script>
 
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
