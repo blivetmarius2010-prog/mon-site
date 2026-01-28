@@ -5,6 +5,19 @@
 <title>test de site</title>
 <style>
 body {
+  transition: background 0.4s ease, color 0.4s ease;
+}
+body {
+  background: #121212;
+  color: white;
+}
+
+body.light {
+  background: #f4f6fb;
+  color: #111;
+}
+
+body {
   margin: 0;
   min-height: 100vh;
   display: flex;
@@ -228,6 +241,39 @@ body.light li {
 .stats p {
   margin: 6px 0;
 }
+/* Animation ajout de note */
+.note {
+  animation: slideIn 0.4s ease;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Animation moyenne */
+#result {
+  transition: transform 0.2s ease;
+}
+
+.pop {
+  transform: scale(1.15);
+}
+.stats {
+  margin-top: 15px;
+  padding: 10px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 10px;
+}
+.stats p {
+  margin: 5px 0;
+}
 
 </style>
 </head>
@@ -259,6 +305,11 @@ body.light li {
 <ul id="notes"></ul>
 
 <p>Moyenne : <strong><span id="result">-</span></strong></p>
+<div class="stats">
+  <p>📌 Nombre de notes : <strong><span id="count">0</span></strong></p>
+  <p>⬆️ Note max : <strong><span id="max">-</span></strong></p>
+  <p>⬇️ Note min : <strong><span id="min">-</span></strong></p>
+</div>
 <div class="stats">
   <p>📌 Nombre de notes : <span id="count">0</span></p>
   <p>⭐ Meilleure note : <span id="max">-</span></p>
@@ -342,6 +393,8 @@ function createNote(n) {
   };
 
   notesList.appendChild(li);
+li.classList.add("note");
+
 }
 
 function updateAverage() {
@@ -394,5 +447,7 @@ if (localStorage.getItem("theme") === "light") {
 </body>
 
 </html>
+
+
 
 
