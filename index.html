@@ -9,7 +9,11 @@
 <meta name="theme-color" content="#020617">
 
 <style>
-* { box-sizing: border-box; margin: 0; padding: 0; }
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
 
 body {
   min-height: 100vh;
@@ -22,8 +26,8 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  transition: 0.4s;
 }
-<p style="color:red">TEST 123</p>
 
 body.light {
   color: #020617;
@@ -41,11 +45,20 @@ body.light {
   box-shadow: 0 30px 80px rgba(0,0,0,0.6);
 }
 
-h1 { text-align: center; margin-bottom: 20px; }
+h1 {
+  text-align: center;
+  margin-bottom: 25px;
+}
 
-section { margin-top: 25px; }
+section {
+  margin-top: 25px;
+}
 
-input {
+h2 {
+  margin-bottom: 12px;
+}
+
+input, select {
   width: 100%;
   padding: 12px;
   border-radius: 14px;
@@ -62,43 +75,39 @@ button {
   cursor: pointer;
   background: linear-gradient(135deg, #38bdf8, #818cf8);
   color: #020617;
+  margin-bottom: 10px;
 }
 
-ul { list-style: none; margin-top: 10px; }
+ul {
+  list-style: none;
+}
 
 li {
   background: rgba(0,0,0,0.35);
   padding: 12px;
   margin-bottom: 10px;
   border-radius: 14px;
-}
-
-.subject {
-  margin-top: 15px;
-  padding: 12px;
-  background: rgba(0,0,0,0.25);
-  border-radius: 16px;
-}
-
-.subject-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 8px;
 }
 
-.delete {
-  background: #ef4444;
-  color: white;
+.delete-btn {
+  background: rgba(239,68,68,0.85);
   border: none;
-  border-radius: 10px;
-  padding: 4px 8px;
+  color: white;
+  border-radius: 50%;
+  width: 26px;
+  height: 26px;
   cursor: pointer;
 }
 
 .stats {
-  margin-top: 12px;
-  font-size: 0.9em;
+  margin-top: 10px;
+  background: rgba(0,0,0,0.25);
+  padding: 12px;
+  border-radius: 14px;
+  font-size: 0.95em;
 }
 
 .theme-btn {
@@ -111,16 +120,23 @@ li {
   border: none;
   background: rgba(255,255,255,0.25);
   font-size: 18px;
+  cursor: pointer;
+}
+
+@media (max-width: 500px) {
+  .app {
+    width: 92%;
+  }
 }
 </style>
 </head>
 
 <body>
-<p style="color:red;font-size:30px;">TEST 123</p>
 
 <button class="theme-btn" onclick="toggleTheme()">🌙</button>
 
 <div class="app">
+
 <h1>🎓 Student Hub</h1>
 
 <!-- TO DO LIST -->
@@ -133,171 +149,148 @@ li {
 
 <!-- MATIÈRES -->
 <section>
-  <h2>📚 Matières & Notes</h2>
-  <input id="subjectInput" placeholder="Nouvelle matière">
-  <button onclick="addSubject()">Ajouter matière</button>
-  <div id="subjects"></div>
+  <h2>📚 Matières</h2>
+  <input id="subjectInput" placeholder="Nom de la matière">
+  <button onclick="addSubject()">Ajouter la matière</button>
+  <ul id="subjects"></ul>
+</section>
+
+<!-- NOTES -->
+<section>
+  <h2>📊 Notes</h2>
+
+  <select id="subjectSelect"></select>
+
+  <input id="noteInput" type="number" min="1" max="6" step="0.1" placeholder="Note (1 à 6)">
+  <button onclick="addNote()">Ajouter la note</button>
 
   <div class="stats">
-    <p>📊 Moyenne générale : <strong><span id="globalAvg">-</span></strong></p>
+    <p>📈 Moyenne : <strong id="avg">-</strong></p>
+    <p>⬆️ Max : <strong id="max">-</strong></p>
+    <p>⬇️ Min : <strong id="min">-</strong></p>
   </div>
 </section>
 
 </div>
 
 <script>
-/* ===== STORAGE ===== */
 let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
-let subjects = JSON.parse(localStorage.getItem("subjects")) || [];
+let subjects = JSON.parse(localStorage.getItem("subjects")) || {};
 
-/* ===== TASKS ===== */
 const taskList = document.getElementById("tasks");
+const subjectList = document.getElementById("subjects");
+const subjectSelect = document.getElementById("subjectSelect");
+
 tasks.forEach(createTask);
+updateSubjectsUI();
 
-function addTask(){
-  let i = taskInput;
-  if(!i.value) return;
-  tasks.push(i.value);
-  save();
-  createTask(i.value);
-  i.value = "";
-}
-
-function createTask(text){
-  let li = document.createElement("li");
-  li.textContent = "✅ " + text;
-  li.onclick = () => {
-    tasks = tasks.filter(t => t !== text);
-    save();
-    li.remove();
-  };
-  taskList.appendChild(li);
-}
-
-/* ===== SUBJECTS ===== */
-const subjectsDiv = document.getElementById("subjects");
-
-subjects.forEach(renderSubject);
-updateGlobal();
-
-function addSubject(){
-  let i = subjectInput;
-  if(!i.value) return;
-
-  let subject = { name: i.value, notes: [] };
-  subjects.push(subject);
-  save();
-  renderSubject(subject);
-  updateGlobal();
-  i.value = "";
-}
-
-function renderSubject(subject){
-  let box = document.createElement("div");
-  box.className = "subject";
-
-  let header = document.createElement("div");
-  header.className = "subject-header";
-
-  let title = document.createElement("strong");
-  title.textContent = subject.name;
-
-  let del = document.createElement("button");
-  del.textContent = "✖";
-  del.className = "delete";
-  del.onclick = () => {
-    subjects = subjects.filter(s => s !== subject);
-    save();
-    box.remove();
-    updateGlobal();
-  };
-
-  header.appendChild(title);
-  header.appendChild(del);
-
-  let input = document.createElement("input");
-  input.type = "number";
-  input.min = 1;
-  input.max = 6;
-  input.placeholder = "Note (1 à 6)";
-
-  let btn = document.createElement("button");
-  btn.textContent = "Ajouter note";
-
-  let ul = document.createElement("ul");
-  let avg = document.createElement("p");
-
-  btn.onclick = () => {
-    let n = Number(input.value);
-    if(n < 1 || n > 6) return;
-    subject.notes.push(n);
-    save();
-    updateSubject();
-    input.value = "";
-  };
-
-  function updateSubject(){
-    ul.innerHTML = "";
-    subject.notes.forEach(n => {
-      let li = document.createElement("li");
-      li.textContent = n;
-      li.onclick = () => {
-        subject.notes = subject.notes.filter(x => x !== n);
-        save();
-        updateSubject();
-        updateGlobal();
-      };
-      ul.appendChild(li);
-    });
-
-    if(subject.notes.length === 0){
-      avg.textContent = "Moyenne : -";
-    } else {
-      let m = subject.notes.reduce((a,b)=>a+b,0)/subject.notes.length;
-      avg.textContent = "Moyenne : " + m.toFixed(2);
-    }
-    updateGlobal();
-  }
-
-  updateSubject();
-
-  box.append(header, input, btn, ul, avg);
-  subjectsDiv.appendChild(box);
-}
-
-/* ===== GLOBAL AVG ===== */
-function updateGlobal(){
-  let all = subjects.flatMap(s => s.notes);
-  globalAvg.textContent = all.length
-    ? (all.reduce((a,b)=>a+b,0)/all.length).toFixed(2)
-    : "-";
-}
-
-/* ===== THEME ===== */
-function toggleTheme(){
-  document.body.classList.toggle("light");
-  localStorage.setItem("theme",
-    document.body.classList.contains("light") ? "light" : "dark"
-  );
-}
-if(localStorage.getItem("theme")==="light"){
-  document.body.classList.add("light");
-}
-
-/* ===== SAVE ===== */
-function save(){
+function save() {
   localStorage.setItem("tasks", JSON.stringify(tasks));
   localStorage.setItem("subjects", JSON.stringify(subjects));
 }
 
-/* ===== PWA ===== */
-if("serviceWorker" in navigator){
+/* TASKS */
+function addTask() {
+  let input = taskInput.value;
+  if (!input) return;
+  tasks.push(input);
+  createTask(input);
+  save();
+  taskInput.value = "";
+}
+
+function createTask(text) {
+  let li = document.createElement("li");
+  li.textContent = text;
+  li.onclick = () => {
+    tasks = tasks.filter(t => t !== text);
+    li.remove();
+    save();
+  };
+  taskList.appendChild(li);
+}
+
+/* SUBJECTS */
+function addSubject() {
+  let name = subjectInput.value;
+  if (!name || subjects[name]) return;
+  subjects[name] = [];
+  subjectInput.value = "";
+  save();
+  updateSubjectsUI();
+}
+
+function deleteSubject(name) {
+  delete subjects[name];
+  save();
+  updateSubjectsUI();
+}
+
+function updateSubjectsUI() {
+  subjectList.innerHTML = "";
+  subjectSelect.innerHTML = "";
+
+  for (let name in subjects) {
+    let li = document.createElement("li");
+    li.innerHTML = `<span>${name}</span>
+      <button class="delete-btn" onclick="deleteSubject('${name}')">✕</button>`;
+    subjectList.appendChild(li);
+
+    let option = document.createElement("option");
+    option.value = name;
+    option.textContent = name;
+    subjectSelect.appendChild(option);
+  }
+
+  updateStats();
+}
+
+/* NOTES */
+function addNote() {
+  let subject = subjectSelect.value;
+  let n = Number(noteInput.value);
+  if (!subject || n < 1 || n > 6) return;
+  subjects[subject].push(n);
+  noteInput.value = "";
+  save();
+  updateStats();
+}
+
+function updateStats() {
+  let subject = subjectSelect.value;
+  if (!subject || subjects[subject].length === 0) {
+    avg.textContent = max.textContent = min.textContent = "-";
+    return;
+  }
+
+  let arr = subjects[subject];
+  let sum = arr.reduce((a,b)=>a+b,0);
+  avg.textContent = (sum / arr.length).toFixed(2);
+  max.textContent = Math.max(...arr);
+  min.textContent = Math.min(...arr);
+}
+
+/* THEME */
+function toggleTheme() {
+  document.body.classList.toggle("light");
+  localStorage.setItem("theme",
+    document.body.classList.contains("light") ? "light" : "dark");
+}
+
+if (localStorage.getItem("theme") === "light") {
+  document.body.classList.add("light");
+}
+
+/* PWA */
+if ("serviceWorker" in navigator) {
   navigator.serviceWorker.register("sw.js");
 }
 </script>
 
 </body>
 </html>
+
+
 
 
 
