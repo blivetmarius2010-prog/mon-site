@@ -1,7 +1,7 @@
 {
   "name": "Ma To-Do & Notes",
   "short_name": "Notes",
-  "start_url": ".",
+  "start_url": "./",
   "display": "standalone",
   "background_color": "#121826",
   "theme_color": "#121826",
