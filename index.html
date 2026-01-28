@@ -13,38 +13,32 @@
 
 body{
   min-height:100vh;
-  font-family:"Segoe UI",system-ui,sans-serif;
+  font-family:Segoe UI,system-ui,sans-serif;
   color:white;
   background:
-    radial-gradient(circle at top, rgba(56,189,248,.15), transparent 40%),
-    radial-gradient(circle at bottom, rgba(129,140,248,.2), transparent 40%),
+    radial-gradient(circle at top, rgba(56,189,248,0.15), transparent 40%),
     linear-gradient(180deg,#020617,#020617);
   display:flex;
   justify-content:center;
   align-items:center;
   transition:.4s;
 }
-
 body.light{
   color:#020617;
-  background:
-    radial-gradient(circle at top, rgba(56,189,248,.35), transparent 45%),
-    linear-gradient(180deg,#f8fafc,#e5e7eb);
+  background:linear-gradient(180deg,#f8fafc,#e5e7eb);
 }
 
 .app{
-  width:370px;
+  width:380px;
   padding:28px;
   border-radius:28px;
   background:rgba(255,255,255,.12);
   backdrop-filter:blur(20px);
-  box-shadow:0 30px 80px rgba(0,0,0,.6),
-             inset 0 1px 1px rgba(255,255,255,.25);
-  animation:appear .9s ease;
+  box-shadow:0 30px 80px rgba(0,0,0,.6);
+  animation:appear .8s ease;
 }
-
 @keyframes appear{
-  from{opacity:0;transform:translateY(40px) scale(.96)}
+  from{opacity:0;transform:translateY(40px)}
   to{opacity:1;transform:none}
 }
 
@@ -52,47 +46,43 @@ header{text-align:center;margin-bottom:25px}
 header h1{font-size:2em}
 header p{opacity:.8}
 
-input,select,button{
+section{margin-top:25px}
+section h2{margin-bottom:10px}
+
+input,select{
   width:100%;
-  padding:13px;
-  border-radius:16px;
+  padding:12px;
+  border-radius:14px;
   border:none;
-  outline:none;
-  margin-bottom:10px;
-  font-size:1em;
+  margin-bottom:8px;
 }
 
 button{
+  width:100%;
+  padding:12px;
+  border-radius:14px;
+  border:none;
   font-weight:bold;
-  cursor:pointer;
   background:linear-gradient(135deg,#38bdf8,#818cf8);
-  color:#020617;
+  cursor:pointer;
 }
 
-section{margin-top:25px}
-section h2{margin-bottom:12px}
-
 ul{list-style:none}
-
 li{
   background:rgba(0,0,0,.35);
   padding:14px;
-  margin-bottom:10px;
-  border-radius:16px;
+  margin-bottom:8px;
+  border-radius:14px;
   cursor:pointer;
-  animation:pop .25s ease;
+  transition:.15s;
 }
-
-@keyframes pop{
-  from{opacity:0;transform:scale(.9)}
-  to{opacity:1;transform:scale(1)}
-}
+li:hover{transform:scale(1.04)}
 
 .stats{
+  margin-top:10px;
   background:rgba(0,0,0,.25);
-  padding:15px;
-  border-radius:18px;
-  font-size:.95em;
+  padding:12px;
+  border-radius:14px;
 }
 
 .theme-btn{
@@ -105,11 +95,6 @@ li{
   border:none;
   background:rgba(255,255,255,.25);
   font-size:18px;
-  cursor:pointer;
-}
-
-@media(max-width:500px){
-  .app{width:92%}
 }
 </style>
 </head>
@@ -122,10 +107,10 @@ li{
 
 <header>
   <h1>🎓 Student Hub</h1>
-  <p>Organisation • Notes • Progression</p>
+  <p>Organisation & Moyennes</p>
 </header>
 
-<!-- TASKS -->
+<!-- TODO -->
 <section>
 <h2>📝 Tâches</h2>
 <input id="taskInput" placeholder="Nouvelle tâche">
@@ -133,148 +118,136 @@ li{
 <ul id="tasks"></ul>
 </section>
 
-<!-- NOTES -->
-<section>
-<h2>📊 Notes</h2>
-<input id="noteInput" type="number" placeholder="Note">
-<button onclick="addNote()">Ajouter</button>
-<ul id="notes"></ul>
-
-<div class="stats">
-<p>📌 Nombre : <strong id="count">0</strong></p>
-<p>📈 Moyenne : <strong id="avg">-</strong></p>
-<p>⬆️ Max : <strong id="max">-</strong></p>
-<p>⬇️ Min : <strong id="min">-</strong></p>
-</div>
-</section>
-
 <!-- SUBJECTS -->
 <section>
 <h2>📚 Matières</h2>
-
 <input id="subjectInput" placeholder="Nouvelle matière">
-<button onclick="addSubject()">Ajouter la matière</button>
-
-<select id="subjectSelect" onchange="renderSubjectNotes()"></select>
-
-<input id="subjectNote" type="number" min="1" max="6" placeholder="Note (1 à 6)">
-<button onclick="addSubjectNote()">Ajouter note</button>
-
-<ul id="subjectNotes"></ul>
+<button onclick="addSubject()">Ajouter matière</button>
+<div id="subjects"></div>
 
 <div class="stats">
-<p>📈 Moyenne matière : <strong id="subjectAvg">-</strong></p>
+  <p>📊 Moyenne générale : <strong><span id="globalAvg">-</span></strong></p>
 </div>
-
-<button style="background:#ff5252" onclick="deleteSubject()">Supprimer la matière</button>
 </section>
 
 </div>
 
 <script>
-let tasks=JSON.parse(localStorage.tasks||"[]");
-let notes=JSON.parse(localStorage.notes||"[]");
-let subjects=JSON.parse(localStorage.subjects||"{}");
+/* ===== STORAGE ===== */
+let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+let subjects = JSON.parse(localStorage.getItem("subjects")) || [];
 
-const tasksUl=tasksEl=document.getElementById("tasks");
-tasks.forEach(t=>addTaskEl(t));
+/* ===== TASKS ===== */
+const taskList = document.getElementById("tasks");
+tasks.forEach(t=>createTask(t));
 
 function addTask(){
-  let v=taskInput.value.trim();
-  if(!v)return;
-  tasks.push(v);save();
-  addTaskEl(v);taskInput.value="";
+  let i=document.getElementById("taskInput");
+  if(!i.value)return;
+  tasks.push(i.value);
+  save();
+  createTask(i.value);
+  i.value="";
 }
-function addTaskEl(t){
+function createTask(text){
   let li=document.createElement("li");
-  li.textContent="✅ "+t;
-  li.onclick=()=>{tasks=tasks.filter(x=>x!==t);save();li.remove()};
-  tasksUl.appendChild(li);
+  li.textContent="✅ "+text;
+  li.onclick=()=>{tasks=tasks.filter(t=>t!==text);save();li.remove()}
+  taskList.appendChild(li);
 }
 
-const notesUl=document.getElementById("notes");
-notes.forEach(n=>addNoteEl(n));updateStats();
-
-function addNote(){
-  let n=+noteInput.value;if(!n)return;
-  notes.push(n);save();addNoteEl(n);updateStats();noteInput.value="";
-}
-function addNoteEl(n){
-  let li=document.createElement("li");
-  li.textContent=n;
-  li.onclick=()=>{notes=notes.filter(x=>x!==n);save();li.remove();updateStats()};
-  notesUl.appendChild(li);
-}
-function updateStats(){
-  count.textContent=notes.length;
-  if(!notes.length){avg.textContent=max.textContent=min.textContent="-";return}
-  avg.textContent=(notes.reduce((a,b)=>a+b)/notes.length).toFixed(2);
-  max.textContent=Math.max(...notes);
-  min.textContent=Math.min(...notes);
-}
+/* ===== SUBJECTS ===== */
+const subjectBox=document.getElementById("subjects");
+subjects.forEach(s=>renderSubject(s));
+updateGlobal();
 
 function addSubject(){
-  let s=subjectInput.value.trim();
-  if(!s||subjects[s])return;
-  subjects[s]=[];save();subjectInput.value="";renderSubjects();
+  let i=document.getElementById("subjectInput");
+  if(!i.value)return;
+  subjects.push({name:i.value,notes:[]});
+  save();
+  renderSubject(subjects.at(-1));
+  i.value="";
 }
 
-function renderSubjects(){
-  subjectSelect.innerHTML="";
-  Object.keys(subjects).forEach(s=>{
-    let o=document.createElement("option");
-    o.textContent=s;subjectSelect.appendChild(o);
-  });
-  renderSubjectNotes();
-}
+function renderSubject(s){
+  let div=document.createElement("div");
+  div.className="stats";
 
-function addSubjectNote(){
-  let s=subjectSelect.value;
-  let n=+subjectNote.value;
-  if(!s||n<1||n>6)return;
-  subjects[s].push(n);save();subjectNote.value="";
-  renderSubjectNotes();
-}
+  div.innerHTML=`
+    <strong>${s.name}</strong>
+    <input type="number" min="1" max="6" placeholder="Note (1-6)">
+    <button>Ajouter note</button>
+    <ul></ul>
+    <p>Moyenne : <span>-</span></p>
+  `;
 
-function renderSubjectNotes(){
-  subjectNotes.innerHTML="";
-  let s=subjectSelect.value;
-  if(!s)return;
-  let arr=subjects[s];
-  arr.forEach((n,i)=>{
+  const input=div.querySelector("input");
+  const ul=div.querySelector("ul");
+  const avgSpan=div.querySelector("span");
+
+  s.notes.forEach(n=>addNoteLi(n));
+
+  div.querySelector("button").onclick=()=>{
+    let n=Number(input.value);
+    if(n<1||n>6)return;
+    s.notes.push(n);
+    save();
+    addNoteLi(n);
+    updateAvg();
+    updateGlobal();
+    input.value="";
+  };
+
+  function addNoteLi(n){
     let li=document.createElement("li");
     li.textContent=n;
-    li.onclick=()=>{arr.splice(i,1);save();renderSubjectNotes()};
-    subjectNotes.appendChild(li);
-  });
-  subjectAvg.textContent=arr.length?(arr.reduce((a,b)=>a+b)/arr.length).toFixed(2):"-";
+    li.onclick=()=>{
+      s.notes=s.notes.filter(x=>x!==n);
+      save();
+      li.remove();
+      updateAvg();
+      updateGlobal();
+    };
+    ul.appendChild(li);
+  }
+
+  function updateAvg(){
+    if(!s.notes.length){avgSpan.textContent="-";return;}
+    avgSpan.textContent=(s.notes.reduce((a,b)=>a+b)/s.notes.length).toFixed(2);
+  }
+  updateAvg();
+  subjectBox.appendChild(div);
 }
 
-function deleteSubject(){
-  let s=subjectSelect.value;
-  if(!s)return;
-  delete subjects[s];save();renderSubjects();
+function updateGlobal(){
+  let all=[];
+  subjects.forEach(s=>all.push(...s.notes));
+  document.getElementById("globalAvg").textContent=
+    all.length?(all.reduce((a,b)=>a+b)/all.length).toFixed(2):"-";
 }
 
+/* ===== THEME ===== */
 function toggleTheme(){
   document.body.classList.toggle("light");
-  localStorage.theme=document.body.classList.contains("light")?"light":"dark";
+  localStorage.setItem("theme",document.body.classList.contains("light")?"light":"dark");
 }
-if(localStorage.theme==="light")document.body.classList.add("light");
+if(localStorage.getItem("theme")==="light")document.body.classList.add("light");
 
+/* ===== SAVE ===== */
 function save(){
-  localStorage.tasks=JSON.stringify(tasks);
-  localStorage.notes=JSON.stringify(notes);
-  localStorage.subjects=JSON.stringify(subjects);
+  localStorage.setItem("tasks",JSON.stringify(tasks));
+  localStorage.setItem("subjects",JSON.stringify(subjects));
 }
 
-renderSubjects();
-
+/* ===== PWA ===== */
 if("serviceWorker"in navigator){navigator.serviceWorker.register("sw.js")}
 </script>
 
 </body>
 </html>
+
+
 
 
 
