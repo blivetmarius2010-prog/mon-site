@@ -3,13 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Notes & Moyennes</title>
+<title>Mon organisation</title>
 
 <style>
-:root {
-  --accent: #4fc3f7;
-}
-
 body {
   margin: 0;
   min-height: 100vh;
@@ -34,26 +30,20 @@ body.light {
 }
 
 .app {
-  width: 340px;
+  width: 350px;
   background: rgba(255,255,255,0.12);
   backdrop-filter: blur(18px);
   border-radius: 24px;
   padding: 25px;
   box-shadow: 0 30px 60px rgba(0,0,0,0.5);
-  animation: fade 0.6s ease;
 }
 
-@keyframes fade {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-h1 {
+h1, h2 {
   text-align: center;
   margin-top: 0;
 }
 
-.theme {
+.theme-toggle {
   position: absolute;
   top: 15px;
   right: 15px;
@@ -84,7 +74,7 @@ button {
   padding: 10px;
   border-radius: 10px;
   border: none;
-  background: var(--accent);
+  background: #4fc3f7;
   font-weight: bold;
   cursor: pointer;
 }
@@ -92,7 +82,7 @@ button {
 ul {
   list-style: none;
   padding: 0;
-  margin: 0;
+  margin: 10px 0;
 }
 
 li {
@@ -103,20 +93,13 @@ li {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  animation: pop 0.25s ease;
-}
-
-@keyframes pop {
-  from { transform: scale(0.9); opacity: 0; }
-  to { transform: scale(1); opacity: 1; }
 }
 
 .stats {
-  margin-top: 15px;
+  margin-top: 10px;
   background: rgba(0,0,0,0.25);
-  padding: 12px;
+  padding: 10px;
   border-radius: 12px;
-  font-size: 0.95em;
 }
 
 .light .app {
@@ -128,24 +111,44 @@ li {
 }
 
 @media (max-width: 500px) {
-  .app {
-    width: 90%;
-  }
-  .input-group {
-    flex-direction: column;
-  }
+  .app { width: 90%; }
+  .input-group { flex-direction: column; }
 }
 </style>
 </head>
 
 <body>
 
-<button class="theme" onclick="toggleTheme()">🌙</button>
+<button class="theme-toggle" onclick="toggleTheme()">🌙</button>
 
 <div class="app">
-<h1>📚 Notes scolaires</h1>
 
-<!-- Ajouter matière -->
+<h1>📝 To-Do List</h1>
+
+<div class="input-group">
+  <input id="taskInput" placeholder="Nouvelle tâche">
+  <button onclick="addTask()">Ajouter</button>
+</div>
+
+<ul id="taskList"></ul>
+
+<hr>
+
+<h2>📊 Notes simples</h2>
+
+<div class="input-group">
+  <input id="noteInput" type="number" placeholder="Note">
+  <button onclick="addNote()">Ajouter</button>
+</div>
+
+<ul id="notesList"></ul>
+
+<p>Moyenne : <strong><span id="average">-</span></strong></p>
+
+<hr>
+
+<h2>📚 Matières</h2>
+
 <div class="input-group">
   <input id="subjectInput" placeholder="Nouvelle matière">
   <button onclick="addSubject()">Ajouter</button>
@@ -153,113 +156,164 @@ li {
 
 <select id="subjectSelect"></select>
 
-<!-- Ajouter note -->
 <div class="input-group">
-  <input id="noteInput" type="number" min="1" max="6" placeholder="Note (1 à 6)">
-  <button onclick="addNote()">OK</button>
+  <input id="subjectNote" type="number" min="1" max="6" placeholder="Note (1 à 6)">
+  <button onclick="addSubjectNote()">OK</button>
 </div>
 
-<ul id="notesList"></ul>
+<ul id="subjectNotes"></ul>
 
-<div class="stats">
-  <p>📊 Moyenne matière : <strong><span id="avgSubject">-</span></strong></p>
-  <p>🧮 Moyenne générale : <strong><span id="avgGlobal">-</span></strong></p>
-</div>
+<p>Moyenne matière : <strong><span id="subjectAvg">-</span></strong></p>
 
-<button onclick="deleteSubject()" style="margin-top:10px;background:#ff5252;">🗑️ Supprimer matière</button>
+<button onclick="deleteSubject()" style="background:#ff5252;">🗑️ Supprimer matière</button>
 
 </div>
 
 <script>
-let data = JSON.parse(localStorage.getItem("schoolData")) || {};
-
-const subjectSelect = document.getElementById("subjectSelect");
-const notesList = document.getElementById("notesList");
-
-function save() {
-  localStorage.setItem("schoolData", JSON.stringify(data));
-}
-
-function refreshSubjects() {
-  subjectSelect.innerHTML = "";
-  Object.keys(data).forEach(s => {
-    let opt = document.createElement("option");
-    opt.value = s;
-    opt.textContent = s;
-    subjectSelect.appendChild(opt);
-  });
-  refreshNotes();
-}
-
-function addSubject() {
-  let name = subjectInput.value.trim();
-  if (!name || data[name]) return;
-  data[name] = [];
-  save();
-  subjectInput.value = "";
-  refreshSubjects();
-}
-
-function addNote() {
-  let s = subjectSelect.value;
-  let n = Number(noteInput.value);
-  if (!s || n < 1 || n > 6) return;
-  data[s].push(n);
-  save();
-  noteInput.value = "";
-  refreshNotes();
-}
-
-function refreshNotes() {
-  notesList.innerHTML = "";
-  let s = subjectSelect.value;
-  if (!s) return;
-
-  let notes = data[s];
-  notes.forEach((n,i) => {
-    let li = document.createElement("li");
-    li.innerHTML = `Note : <strong>${n}</strong> <button onclick="removeNote(${i})">❌</button>`;
-    notesList.appendChild(li);
-  });
-
-  document.getElementById("avgSubject").textContent =
-    notes.length ? (notes.reduce((a,b)=>a+b)/notes.length).toFixed(2) : "-";
-
-  calcGlobal();
-}
-
-function removeNote(i) {
-  let s = subjectSelect.value;
-  data[s].splice(i,1);
-  save();
-  refreshNotes();
-}
-
-function deleteSubject() {
-  let s = subjectSelect.value;
-  if (!s) return;
-  if (!confirm("Supprimer la matière ?")) return;
-  delete data[s];
-  save();
-  refreshSubjects();
-}
-
-function calcGlobal() {
-  let all = [];
-  Object.values(data).forEach(arr => all.push(...arr));
-  document.getElementById("avgGlobal").textContent =
-    all.length ? (all.reduce((a,b)=>a+b)/all.length).toFixed(2) : "-";
-}
-
 /* THEME */
 function toggleTheme() {
   document.body.classList.toggle("light");
   localStorage.setItem("theme",
     document.body.classList.contains("light") ? "light" : "dark");
 }
-
 if (localStorage.getItem("theme") === "light") {
   document.body.classList.add("light");
+}
+
+/* TODO */
+let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+let taskList = document.getElementById("taskList");
+
+function saveTasks() {
+  localStorage.setItem("tasks", JSON.stringify(tasks));
+}
+
+function addTask() {
+  let v = taskInput.value.trim();
+  if (!v) return;
+  tasks.push(v);
+  saveTasks();
+  taskInput.value = "";
+  renderTasks();
+}
+
+function renderTasks() {
+  taskList.innerHTML = "";
+  tasks.forEach((t,i) => {
+    let li = document.createElement("li");
+    li.innerHTML = `${t} <button onclick="removeTask(${i})">❌</button>`;
+    taskList.appendChild(li);
+  });
+}
+
+function removeTask(i) {
+  tasks.splice(i,1);
+  saveTasks();
+  renderTasks();
+}
+renderTasks();
+
+/* NOTES */
+let notes = JSON.parse(localStorage.getItem("notes")) || [];
+let notesList = document.getElementById("notesList");
+
+function saveNotes() {
+  localStorage.setItem("notes", JSON.stringify(notes));
+}
+
+function addNote() {
+  let n = Number(noteInput.value);
+  if (!n) return;
+  notes.push(n);
+  saveNotes();
+  noteInput.value = "";
+  renderNotes();
+}
+
+function renderNotes() {
+  notesList.innerHTML = "";
+  notes.forEach((n,i) => {
+    let li = document.createElement("li");
+    li.innerHTML = `${n} <button onclick="removeNote(${i})">❌</button>`;
+    notesList.appendChild(li);
+  });
+  average.textContent =
+    notes.length ? (notes.reduce((a,b)=>a+b)/notes.length).toFixed(2) : "-";
+}
+
+function removeNote(i) {
+  notes.splice(i,1);
+  saveNotes();
+  renderNotes();
+}
+renderNotes();
+
+/* MATIERES */
+let subjects = JSON.parse(localStorage.getItem("subjects")) || {};
+let subjectSelect = document.getElementById("subjectSelect");
+let subjectNotesList = document.getElementById("subjectNotes");
+
+function saveSubjects() {
+  localStorage.setItem("subjects", JSON.stringify(subjects));
+}
+
+function refreshSubjects() {
+  subjectSelect.innerHTML = "";
+  Object.keys(subjects).forEach(s => {
+    let o = document.createElement("option");
+    o.textContent = s;
+    subjectSelect.appendChild(o);
+  });
+  refreshSubjectNotes();
+}
+
+function addSubject() {
+  let s = subjectInput.value.trim();
+  if (!s || subjects[s]) return;
+  subjects[s] = [];
+  saveSubjects();
+  subjectInput.value = "";
+  refreshSubjects();
+}
+
+function addSubjectNote() {
+  let s = subjectSelect.value;
+  let n = Number(subjectNote.value);
+  if (!s || n < 1 || n > 6) return;
+  subjects[s].push(n);
+  saveSubjects();
+  subjectNote.value = "";
+  refreshSubjectNotes();
+}
+
+function refreshSubjectNotes() {
+  subjectNotesList.innerHTML = "";
+  let s = subjectSelect.value;
+  if (!s) return;
+  let arr = subjects[s];
+  arr.forEach((n,i) => {
+    let li = document.createElement("li");
+    li.innerHTML = `${n} <button onclick="removeSubjectNote(${i})">❌</button>`;
+    subjectNotesList.appendChild(li);
+  });
+  subjectAvg.textContent =
+    arr.length ? (arr.reduce((a,b)=>a+b)/arr.length).toFixed(2) : "-";
+}
+
+function removeSubjectNote(i) {
+  let s = subjectSelect.value;
+  subjects[s].splice(i,1);
+  saveSubjects();
+  refreshSubjectNotes();
+}
+
+function deleteSubject() {
+  let s = subjectSelect.value;
+  if (!s) return;
+  if (!confirm("Supprimer cette matière ?")) return;
+  delete subjects[s];
+  saveSubjects();
+  refreshSubjects();
 }
 
 refreshSubjects();
@@ -267,6 +321,8 @@ refreshSubjects();
 
 </body>
 </html>
+
+
 
 
 
