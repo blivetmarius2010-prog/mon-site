@@ -1,255 +1,269 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <title>Ma To-Do & Moyennes</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Student Hub</title>
 
-  <!-- PWA -->
-  <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#121826">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0f172a">
 
-  <style>
-    /* ===== BASE ===== */
-    body {
-      margin: 0;
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-family: Arial, sans-serif;
-      color: white;
-      background:
-        linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)),
-        url("https://images.unsplash.com/photo-1500530855697-b586d89ba3ee");
-      background-size: cover;
-      background-position: center;
-      transition: background 0.4s ease, color 0.4s ease;
-    }
+<style>
+/* ===== RESET ===== */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
 
-    body.light {
-      color: #111;
-      background:
-        linear-gradient(rgba(255,255,255,0.6), rgba(255,255,255,0.6)),
-        url("https://images.unsplash.com/photo-1500530855697-b586d89ba3ee");
-    }
+/* ===== BODY ===== */
+body {
+  min-height: 100vh;
+  font-family: "Segoe UI", system-ui, sans-serif;
+  color: white;
+  background:
+    linear-gradient(120deg, rgba(15,23,42,0.9), rgba(2,6,23,0.9)),
+    url("https://images.unsplash.com/photo-1523050854058-8df90110c9f1");
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: 0.4s;
+}
 
-    /* ===== APP ===== */
-    .app {
-      background: rgba(255,255,255,0.1);
-      backdrop-filter: blur(16px);
-      padding: 30px;
-      border-radius: 22px;
-      width: 320px;
-      box-shadow: 0 25px 50px rgba(0,0,0,0.4);
-      animation: fadeIn 0.6s ease;
-    }
+body.light {
+  color: #0f172a;
+  background:
+    linear-gradient(120deg, rgba(255,255,255,0.85), rgba(241,245,249,0.85)),
+    url("https://images.unsplash.com/photo-1523050854058-8df90110c9f1");
+}
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
+/* ===== APP CARD ===== */
+.app {
+  width: 360px;
+  padding: 25px;
+  border-radius: 24px;
+  background: rgba(255,255,255,0.12);
+  backdrop-filter: blur(18px);
+  box-shadow: 0 30px 70px rgba(0,0,0,0.5);
+  animation: enter 0.8s ease;
+}
 
-    h1, h2 {
-      text-align: center;
-      margin: 10px 0;
-    }
+@keyframes enter {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
 
-    hr {
-      border: none;
-      height: 1px;
-      background: rgba(255,255,255,0.2);
-      margin: 25px 0;
-    }
+/* ===== HEADER ===== */
+header {
+  text-align: center;
+  margin-bottom: 20px;
+}
 
-    /* ===== INPUTS ===== */
-    .input-group {
-      display: flex;
-      gap: 10px;
-    }
+header h1 {
+  font-size: 1.9em;
+  letter-spacing: 1px;
+}
 
-    input {
-      flex: 1;
-      padding: 10px;
-      border-radius: 10px;
-      border: none;
-      outline: none;
-    }
+header p {
+  font-size: 0.9em;
+  opacity: 0.85;
+}
 
-    button {
-      padding: 10px 15px;
-      border-radius: 10px;
-      border: none;
-      background: #4fc3f7;
-      color: black;
-      font-weight: bold;
-      cursor: pointer;
-    }
+/* ===== BUTTONS ===== */
+button {
+  border: none;
+  border-radius: 14px;
+  padding: 12px;
+  font-weight: bold;
+  cursor: pointer;
+  background: linear-gradient(135deg, #38bdf8, #818cf8);
+  color: black;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
 
-    button:hover {
-      background: #81d4fa;
-    }
+button:hover {
+  transform: scale(1.04);
+  box-shadow: 0 8px 25px rgba(56,189,248,0.6);
+}
 
-    /* ===== LISTES ===== */
-    ul {
-      list-style: none;
-      padding: 0;
-      margin-top: 15px;
-    }
+/* ===== INPUT ===== */
+input {
+  width: 100%;
+  padding: 12px;
+  border-radius: 14px;
+  border: none;
+  margin-bottom: 10px;
+  outline: none;
+}
 
-    li {
-      background: rgba(0,0,0,0.35);
-      padding: 12px;
-      margin-bottom: 10px;
-      border-radius: 12px;
-      cursor: pointer;
-      animation: pop 0.25s ease;
-    }
+/* ===== SECTIONS ===== */
+section {
+  margin-top: 22px;
+}
 
-    li:hover {
-      transform: scale(1.03);
-    }
+section h2 {
+  font-size: 1.2em;
+  margin-bottom: 10px;
+}
 
-    @keyframes pop {
-      from { opacity: 0; transform: scale(0.9); }
-      to   { opacity: 1; transform: scale(1); }
-    }
+/* ===== LISTS ===== */
+ul {
+  list-style: none;
+}
 
-    /* ===== STATS ===== */
-    .stats {
-      margin-top: 15px;
-      background: rgba(0,0,0,0.25);
-      padding: 12px;
-      border-radius: 12px;
-      font-size: 0.95em;
-    }
+li {
+  background: rgba(0,0,0,0.35);
+  margin-bottom: 10px;
+  padding: 12px;
+  border-radius: 14px;
+  display: flex;
+  justify-content: space-between;
+  cursor: pointer;
+  animation: pop 0.3s ease;
+}
 
-    /* ===== THEME BUTTON ===== */
-    .theme-toggle {
-      position: absolute;
-      top: 15px;
-      right: 15px;
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      border: none;
-      cursor: pointer;
-      font-size: 18px;
-      background: rgba(255,255,255,0.2);
-    }
+li:hover {
+  background: rgba(0,0,0,0.55);
+}
 
-    /* ===== MOBILE ===== */
-    @media (max-width: 500px) {
-      .app {
-        width: 90%;
-        padding: 20px;
-      }
+@keyframes pop {
+  from { transform: scale(0.9); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
 
-      .input-group {
-        flex-direction: column;
-      }
+/* ===== STATS ===== */
+.stats {
+  background: rgba(0,0,0,0.25);
+  padding: 15px;
+  border-radius: 16px;
+  font-size: 0.9em;
+}
 
-      input, button {
-        width: 100%;
-        font-size: 16px;
-      }
-    }
-  </style>
+.stats p {
+  margin: 6px 0;
+}
+
+/* ===== THEME BUTTON ===== */
+.theme-btn {
+  position: fixed;
+  top: 15px;
+  right: 15px;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  font-size: 18px;
+  background: rgba(255,255,255,0.25);
+}
+
+/* ===== FOOTER ===== */
+footer {
+  text-align: center;
+  font-size: 0.75em;
+  opacity: 0.7;
+  margin-top: 20px;
+}
+</style>
 </head>
 
 <body>
 
-<button class="theme-toggle" id="themeBtn" onclick="toggleTheme()">🌙</button>
+<button class="theme-btn" onclick="toggleTheme()">🌙</button>
 
 <div class="app">
 
-  <h1>📝 To-Do List</h1>
+<header>
+  <h1>🎓 Student Hub</h1>
+  <p>Organisation • Moyennes • Objectifs</p>
+</header>
 
-  <div class="input-group">
-    <input id="task" placeholder="Nouvelle tâche">
-    <button onclick="addTask()">Ajouter</button>
-  </div>
+<section>
+  <h2>📝 Tâches</h2>
+  <input id="taskInput" placeholder="Nouvelle tâche">
+  <button onclick="addTask()">Ajouter</button>
+  <ul id="tasks"></ul>
+</section>
 
-  <ul id="list"></ul>
-
-  <hr>
-
-  <h2>📊 Moyenne</h2>
-
-  <div class="input-group">
-    <input id="note" type="number" placeholder="Note">
-    <button onclick="addNote()">Ajouter</button>
-  </div>
-
+<section>
+  <h2>📊 Notes</h2>
+  <input id="noteInput" type="number" placeholder="Note">
+  <button onclick="addNote()">Ajouter</button>
   <ul id="notes"></ul>
 
-  <p>Moyenne : <strong><span id="result">-</span></strong></p>
-
   <div class="stats">
-    <p>📌 Notes : <span id="count">0</span></p>
+    <p>📌 Nombre : <span id="count">0</span></p>
+    <p>📈 Moyenne : <span id="avg">-</span></p>
     <p>⬆️ Max : <span id="max">-</span></p>
     <p>⬇️ Min : <span id="min">-</span></p>
   </div>
+</section>
+
+<section>
+  <h2>🎯 Motivation</h2>
+  <p id="quote">Clique pour une citation ✨</p>
+  <button onclick="newQuote()">Inspirer</button>
+</section>
+
+<footer>
+  <p>🚀 Créé par toi • Stocké localement • Fonctionne hors ligne</p>
+</footer>
 
 </div>
 
 <script>
-/* ===== TO-DO ===== */
-let list = document.getElementById("list");
+/* ===== DATA ===== */
 let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+let notes = JSON.parse(localStorage.getItem("notes")) || [];
 
-tasks.forEach(createTask);
+/* ===== TASKS ===== */
+const taskList = document.getElementById("tasks");
+
+tasks.forEach(addTaskElement);
 
 function addTask() {
-  let input = document.getElementById("task");
+  let input = document.getElementById("taskInput");
   if (!input.value) return;
-
   tasks.push(input.value);
-  saveTasks();
-  createTask(input.value);
+  save();
+  addTaskElement(input.value);
   input.value = "";
 }
 
-function createTask(text) {
+function addTaskElement(text) {
   let li = document.createElement("li");
-  li.textContent = text;
+  li.innerHTML = `✅ ${text}`;
   li.onclick = () => {
     tasks = tasks.filter(t => t !== text);
-    saveTasks();
+    save();
     li.remove();
   };
-  list.appendChild(li);
-}
-
-function saveTasks() {
-  localStorage.setItem("tasks", JSON.stringify(tasks));
+  taskList.appendChild(li);
 }
 
 /* ===== NOTES ===== */
-let notesList = document.getElementById("notes");
-let result = document.getElementById("result");
-let notes = JSON.parse(localStorage.getItem("notes")) || [];
+const notesList = document.getElementById("notes");
 
-notes.forEach(createNote);
+notes.forEach(addNoteElement);
 updateStats();
 
 function addNote() {
-  let input = document.getElementById("note");
+  let input = document.getElementById("noteInput");
   if (!input.value) return;
-
   let n = Number(input.value);
   notes.push(n);
-  saveNotes();
-  createNote(n);
+  save();
+  addNoteElement(n);
   updateStats();
   input.value = "";
 }
 
-function createNote(n) {
+function addNoteElement(n) {
   let li = document.createElement("li");
   li.textContent = n;
   li.onclick = () => {
     notes = notes.filter(x => x !== n);
-    saveNotes();
+    save();
     li.remove();
     updateStats();
   };
@@ -257,38 +271,47 @@ function createNote(n) {
 }
 
 function updateStats() {
+  document.getElementById("count").textContent = notes.length;
   if (notes.length === 0) {
-    result.textContent = "-";
-    document.getElementById("count").textContent = 0;
-    document.getElementById("max").textContent = "-";
-    document.getElementById("min").textContent = "-";
+    avg.textContent = max.textContent = min.textContent = "-";
     return;
   }
-
-  let sum = notes.reduce((a,b) => a + b, 0);
-  result.textContent = (sum / notes.length).toFixed(2);
-  document.getElementById("count").textContent = notes.length;
-  document.getElementById("max").textContent = Math.max(...notes);
-  document.getElementById("min").textContent = Math.min(...notes);
+  let sum = notes.reduce((a,b)=>a+b,0);
+  avg.textContent = (sum / notes.length).toFixed(2);
+  max.textContent = Math.max(...notes);
+  min.textContent = Math.min(...notes);
 }
 
-function saveNotes() {
-  localStorage.setItem("notes", JSON.stringify(notes));
+/* ===== QUOTES ===== */
+const quotes = [
+  "Travaille aujourd’hui, brille demain ✨",
+  "La discipline bat la motivation.",
+  "Chaque effort compte.",
+  "Même lentement, tu avances.",
+  "Le futur se construit maintenant."
+];
+
+function newQuote() {
+  document.getElementById("quote").textContent =
+    quotes[Math.floor(Math.random()*quotes.length)];
 }
 
 /* ===== THEME ===== */
-let themeBtn = document.getElementById("themeBtn");
-
 function toggleTheme() {
   document.body.classList.toggle("light");
-  let light = document.body.classList.contains("light");
-  themeBtn.textContent = light ? "☀️" : "🌙";
-  localStorage.setItem("theme", light ? "light" : "dark");
+  localStorage.setItem("theme",
+    document.body.classList.contains("light") ? "light" : "dark"
+  );
 }
 
 if (localStorage.getItem("theme") === "light") {
   document.body.classList.add("light");
-  themeBtn.textContent = "☀️";
+}
+
+/* ===== SAVE ===== */
+function save() {
+  localStorage.setItem("tasks", JSON.stringify(tasks));
+  localStorage.setItem("notes", JSON.stringify(notes));
 }
 
 /* ===== SERVICE WORKER ===== */
@@ -299,6 +322,8 @@ if ("serviceWorker" in navigator) {
 
 </body>
 </html>
+
+
 
 
 
