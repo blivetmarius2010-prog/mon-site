@@ -3,324 +3,280 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mon organisation</title>
+<title>Student Hub</title>
+
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#020617">
 
 <style>
-body {
-  margin: 0;
-  min-height: 100vh;
-  font-family: Arial, sans-serif;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+*{box-sizing:border-box;margin:0;padding:0}
+
+body{
+  min-height:100vh;
+  font-family:"Segoe UI",system-ui,sans-serif;
+  color:white;
   background:
-    linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)),
-    url("https://images.unsplash.com/photo-1500530855697-b586d89ba3ee");
-  background-size: cover;
-  background-position: center;
-  color: white;
-  transition: 0.4s;
+    radial-gradient(circle at top, rgba(56,189,248,.15), transparent 40%),
+    radial-gradient(circle at bottom, rgba(129,140,248,.2), transparent 40%),
+    linear-gradient(180deg,#020617,#020617);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  transition:.4s;
 }
 
-body.light {
+body.light{
+  color:#020617;
   background:
-    linear-gradient(rgba(255,255,255,0.7), rgba(255,255,255,0.7)),
-    url("https://images.unsplash.com/photo-1500530855697-b586d89ba3ee");
-  color: #111;
+    radial-gradient(circle at top, rgba(56,189,248,.35), transparent 45%),
+    linear-gradient(180deg,#f8fafc,#e5e7eb);
 }
 
-.app {
-  width: 350px;
-  background: rgba(255,255,255,0.12);
-  backdrop-filter: blur(18px);
-  border-radius: 24px;
-  padding: 25px;
-  box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+.app{
+  width:370px;
+  padding:28px;
+  border-radius:28px;
+  background:rgba(255,255,255,.12);
+  backdrop-filter:blur(20px);
+  box-shadow:0 30px 80px rgba(0,0,0,.6),
+             inset 0 1px 1px rgba(255,255,255,.25);
+  animation:appear .9s ease;
 }
 
-h1, h2 {
-  text-align: center;
-  margin-top: 0;
+@keyframes appear{
+  from{opacity:0;transform:translateY(40px) scale(.96)}
+  to{opacity:1;transform:none}
 }
 
-.theme-toggle {
-  position: absolute;
-  top: 15px;
-  right: 15px;
-  border: none;
-  background: rgba(255,255,255,0.2);
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  cursor: pointer;
-  font-size: 18px;
+header{text-align:center;margin-bottom:25px}
+header h1{font-size:2em}
+header p{opacity:.8}
+
+input,select,button{
+  width:100%;
+  padding:13px;
+  border-radius:16px;
+  border:none;
+  outline:none;
+  margin-bottom:10px;
+  font-size:1em;
 }
 
-.input-group {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 10px;
+button{
+  font-weight:bold;
+  cursor:pointer;
+  background:linear-gradient(135deg,#38bdf8,#818cf8);
+  color:#020617;
 }
 
-input, select {
-  flex: 1;
-  padding: 10px;
-  border-radius: 10px;
-  border: none;
-  outline: none;
+section{margin-top:25px}
+section h2{margin-bottom:12px}
+
+ul{list-style:none}
+
+li{
+  background:rgba(0,0,0,.35);
+  padding:14px;
+  margin-bottom:10px;
+  border-radius:16px;
+  cursor:pointer;
+  animation:pop .25s ease;
 }
 
-button {
-  padding: 10px;
-  border-radius: 10px;
-  border: none;
-  background: #4fc3f7;
-  font-weight: bold;
-  cursor: pointer;
+@keyframes pop{
+  from{opacity:0;transform:scale(.9)}
+  to{opacity:1;transform:scale(1)}
 }
 
-ul {
-  list-style: none;
-  padding: 0;
-  margin: 10px 0;
+.stats{
+  background:rgba(0,0,0,.25);
+  padding:15px;
+  border-radius:18px;
+  font-size:.95em;
 }
 
-li {
-  background: rgba(0,0,0,0.35);
-  padding: 10px;
-  border-radius: 10px;
-  margin-bottom: 8px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+.theme-btn{
+  position:fixed;
+  top:16px;
+  right:16px;
+  width:44px;
+  height:44px;
+  border-radius:50%;
+  border:none;
+  background:rgba(255,255,255,.25);
+  font-size:18px;
+  cursor:pointer;
 }
 
-.stats {
-  margin-top: 10px;
-  background: rgba(0,0,0,0.25);
-  padding: 10px;
-  border-radius: 12px;
-}
-
-.light .app {
-  background: rgba(255,255,255,0.85);
-}
-
-.light li {
-  background: rgba(0,0,0,0.05);
-}
-
-@media (max-width: 500px) {
-  .app { width: 90%; }
-  .input-group { flex-direction: column; }
+@media(max-width:500px){
+  .app{width:92%}
 }
 </style>
 </head>
 
 <body>
 
-<button class="theme-toggle" onclick="toggleTheme()">🌙</button>
+<button class="theme-btn" onclick="toggleTheme()">🌙</button>
 
 <div class="app">
 
-<h1>📝 To-Do List</h1>
+<header>
+  <h1>🎓 Student Hub</h1>
+  <p>Organisation • Notes • Progression</p>
+</header>
 
-<div class="input-group">
-  <input id="taskInput" placeholder="Nouvelle tâche">
-  <button onclick="addTask()">Ajouter</button>
+<!-- TASKS -->
+<section>
+<h2>📝 Tâches</h2>
+<input id="taskInput" placeholder="Nouvelle tâche">
+<button onclick="addTask()">Ajouter</button>
+<ul id="tasks"></ul>
+</section>
+
+<!-- NOTES -->
+<section>
+<h2>📊 Notes</h2>
+<input id="noteInput" type="number" placeholder="Note">
+<button onclick="addNote()">Ajouter</button>
+<ul id="notes"></ul>
+
+<div class="stats">
+<p>📌 Nombre : <strong id="count">0</strong></p>
+<p>📈 Moyenne : <strong id="avg">-</strong></p>
+<p>⬆️ Max : <strong id="max">-</strong></p>
+<p>⬇️ Min : <strong id="min">-</strong></p>
 </div>
+</section>
 
-<ul id="taskList"></ul>
-
-<hr>
-
-<h2>📊 Notes simples</h2>
-
-<div class="input-group">
-  <input id="noteInput" type="number" placeholder="Note">
-  <button onclick="addNote()">Ajouter</button>
-</div>
-
-<ul id="notesList"></ul>
-
-<p>Moyenne : <strong><span id="average">-</span></strong></p>
-
-<hr>
-
+<!-- SUBJECTS -->
+<section>
 <h2>📚 Matières</h2>
 
-<div class="input-group">
-  <input id="subjectInput" placeholder="Nouvelle matière">
-  <button onclick="addSubject()">Ajouter</button>
-</div>
+<input id="subjectInput" placeholder="Nouvelle matière">
+<button onclick="addSubject()">Ajouter la matière</button>
 
-<select id="subjectSelect"></select>
+<select id="subjectSelect" onchange="renderSubjectNotes()"></select>
 
-<div class="input-group">
-  <input id="subjectNote" type="number" min="1" max="6" placeholder="Note (1 à 6)">
-  <button onclick="addSubjectNote()">OK</button>
-</div>
+<input id="subjectNote" type="number" min="1" max="6" placeholder="Note (1 à 6)">
+<button onclick="addSubjectNote()">Ajouter note</button>
 
 <ul id="subjectNotes"></ul>
 
-<p>Moyenne matière : <strong><span id="subjectAvg">-</span></strong></p>
+<div class="stats">
+<p>📈 Moyenne matière : <strong id="subjectAvg">-</strong></p>
+</div>
 
-<button onclick="deleteSubject()" style="background:#ff5252;">🗑️ Supprimer matière</button>
+<button style="background:#ff5252" onclick="deleteSubject()">Supprimer la matière</button>
+</section>
 
 </div>
 
 <script>
-/* THEME */
-function toggleTheme() {
+let tasks=JSON.parse(localStorage.tasks||"[]");
+let notes=JSON.parse(localStorage.notes||"[]");
+let subjects=JSON.parse(localStorage.subjects||"{}");
+
+const tasksUl=tasksEl=document.getElementById("tasks");
+tasks.forEach(t=>addTaskEl(t));
+
+function addTask(){
+  let v=taskInput.value.trim();
+  if(!v)return;
+  tasks.push(v);save();
+  addTaskEl(v);taskInput.value="";
+}
+function addTaskEl(t){
+  let li=document.createElement("li");
+  li.textContent="✅ "+t;
+  li.onclick=()=>{tasks=tasks.filter(x=>x!==t);save();li.remove()};
+  tasksUl.appendChild(li);
+}
+
+const notesUl=document.getElementById("notes");
+notes.forEach(n=>addNoteEl(n));updateStats();
+
+function addNote(){
+  let n=+noteInput.value;if(!n)return;
+  notes.push(n);save();addNoteEl(n);updateStats();noteInput.value="";
+}
+function addNoteEl(n){
+  let li=document.createElement("li");
+  li.textContent=n;
+  li.onclick=()=>{notes=notes.filter(x=>x!==n);save();li.remove();updateStats()};
+  notesUl.appendChild(li);
+}
+function updateStats(){
+  count.textContent=notes.length;
+  if(!notes.length){avg.textContent=max.textContent=min.textContent="-";return}
+  avg.textContent=(notes.reduce((a,b)=>a+b)/notes.length).toFixed(2);
+  max.textContent=Math.max(...notes);
+  min.textContent=Math.min(...notes);
+}
+
+function addSubject(){
+  let s=subjectInput.value.trim();
+  if(!s||subjects[s])return;
+  subjects[s]=[];save();subjectInput.value="";renderSubjects();
+}
+
+function renderSubjects(){
+  subjectSelect.innerHTML="";
+  Object.keys(subjects).forEach(s=>{
+    let o=document.createElement("option");
+    o.textContent=s;subjectSelect.appendChild(o);
+  });
+  renderSubjectNotes();
+}
+
+function addSubjectNote(){
+  let s=subjectSelect.value;
+  let n=+subjectNote.value;
+  if(!s||n<1||n>6)return;
+  subjects[s].push(n);save();subjectNote.value="";
+  renderSubjectNotes();
+}
+
+function renderSubjectNotes(){
+  subjectNotes.innerHTML="";
+  let s=subjectSelect.value;
+  if(!s)return;
+  let arr=subjects[s];
+  arr.forEach((n,i)=>{
+    let li=document.createElement("li");
+    li.textContent=n;
+    li.onclick=()=>{arr.splice(i,1);save();renderSubjectNotes()};
+    subjectNotes.appendChild(li);
+  });
+  subjectAvg.textContent=arr.length?(arr.reduce((a,b)=>a+b)/arr.length).toFixed(2):"-";
+}
+
+function deleteSubject(){
+  let s=subjectSelect.value;
+  if(!s)return;
+  delete subjects[s];save();renderSubjects();
+}
+
+function toggleTheme(){
   document.body.classList.toggle("light");
-  localStorage.setItem("theme",
-    document.body.classList.contains("light") ? "light" : "dark");
+  localStorage.theme=document.body.classList.contains("light")?"light":"dark";
 }
-if (localStorage.getItem("theme") === "light") {
-  document.body.classList.add("light");
-}
+if(localStorage.theme==="light")document.body.classList.add("light");
 
-/* TODO */
-let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
-let taskList = document.getElementById("taskList");
-
-function saveTasks() {
-  localStorage.setItem("tasks", JSON.stringify(tasks));
+function save(){
+  localStorage.tasks=JSON.stringify(tasks);
+  localStorage.notes=JSON.stringify(notes);
+  localStorage.subjects=JSON.stringify(subjects);
 }
 
-function addTask() {
-  let v = taskInput.value.trim();
-  if (!v) return;
-  tasks.push(v);
-  saveTasks();
-  taskInput.value = "";
-  renderTasks();
-}
+renderSubjects();
 
-function renderTasks() {
-  taskList.innerHTML = "";
-  tasks.forEach((t,i) => {
-    let li = document.createElement("li");
-    li.innerHTML = `${t} <button onclick="removeTask(${i})">❌</button>`;
-    taskList.appendChild(li);
-  });
-}
-
-function removeTask(i) {
-  tasks.splice(i,1);
-  saveTasks();
-  renderTasks();
-}
-renderTasks();
-
-/* NOTES */
-let notes = JSON.parse(localStorage.getItem("notes")) || [];
-let notesList = document.getElementById("notesList");
-
-function saveNotes() {
-  localStorage.setItem("notes", JSON.stringify(notes));
-}
-
-function addNote() {
-  let n = Number(noteInput.value);
-  if (!n) return;
-  notes.push(n);
-  saveNotes();
-  noteInput.value = "";
-  renderNotes();
-}
-
-function renderNotes() {
-  notesList.innerHTML = "";
-  notes.forEach((n,i) => {
-    let li = document.createElement("li");
-    li.innerHTML = `${n} <button onclick="removeNote(${i})">❌</button>`;
-    notesList.appendChild(li);
-  });
-  average.textContent =
-    notes.length ? (notes.reduce((a,b)=>a+b)/notes.length).toFixed(2) : "-";
-}
-
-function removeNote(i) {
-  notes.splice(i,1);
-  saveNotes();
-  renderNotes();
-}
-renderNotes();
-
-/* MATIERES */
-let subjects = JSON.parse(localStorage.getItem("subjects")) || {};
-let subjectSelect = document.getElementById("subjectSelect");
-let subjectNotesList = document.getElementById("subjectNotes");
-
-function saveSubjects() {
-  localStorage.setItem("subjects", JSON.stringify(subjects));
-}
-
-function refreshSubjects() {
-  subjectSelect.innerHTML = "";
-  Object.keys(subjects).forEach(s => {
-    let o = document.createElement("option");
-    o.textContent = s;
-    subjectSelect.appendChild(o);
-  });
-  refreshSubjectNotes();
-}
-
-function addSubject() {
-  let s = subjectInput.value.trim();
-  if (!s || subjects[s]) return;
-  subjects[s] = [];
-  saveSubjects();
-  subjectInput.value = "";
-  refreshSubjects();
-}
-
-function addSubjectNote() {
-  let s = subjectSelect.value;
-  let n = Number(subjectNote.value);
-  if (!s || n < 1 || n > 6) return;
-  subjects[s].push(n);
-  saveSubjects();
-  subjectNote.value = "";
-  refreshSubjectNotes();
-}
-
-function refreshSubjectNotes() {
-  subjectNotesList.innerHTML = "";
-  let s = subjectSelect.value;
-  if (!s) return;
-  let arr = subjects[s];
-  arr.forEach((n,i) => {
-    let li = document.createElement("li");
-    li.innerHTML = `${n} <button onclick="removeSubjectNote(${i})">❌</button>`;
-    subjectNotesList.appendChild(li);
-  });
-  subjectAvg.textContent =
-    arr.length ? (arr.reduce((a,b)=>a+b)/arr.length).toFixed(2) : "-";
-}
-
-function removeSubjectNote(i) {
-  let s = subjectSelect.value;
-  subjects[s].splice(i,1);
-  saveSubjects();
-  refreshSubjectNotes();
-}
-
-function deleteSubject() {
-  let s = subjectSelect.value;
-  if (!s) return;
-  if (!confirm("Supprimer cette matière ?")) return;
-  delete subjects[s];
-  saveSubjects();
-  refreshSubjects();
-}
-
-refreshSubjects();
+if("serviceWorker"in navigator){navigator.serviceWorker.register("sw.js")}
 </script>
 
 </body>
 </html>
+
+
 
 
 
