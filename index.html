@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>test de site</title>
+<style>
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: Arial, sans-serif;
+
+  color: white;                 /* 🔴 TRÈS IMPORTANT */
+  background-color: #121826;    /* 🔴 évite l’écran gris */
+
+  background-image:
+    linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)),
+    url("https://images.unsplash.com/photo-1500530855697-b586d89ba3ee");
+
+  background-size: cover;
+  background-position: center;
+}
+
+
+/* Carte centrale */
+.app {
+  background: linear-gradient(
+    145deg,
+    rgba(255,255,255,0.15),
+    rgba(255,255,255,0.05)
+  );
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+
+  padding: 30px;
+  border-radius: 24px;
+  width: 320px;
+  color: white;
+
+  box-shadow:
+    0 25px 50px rgba(0,0,0,0.45),
+    inset 0 1px 1px rgba(255,255,255,0.2);
+
+  animation: fadeIn 0.6s ease;
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Titre */
+h1 {
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 1.8em;
+  letter-spacing: 1px;
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 10px;
+  font-weight: normal;
+  opacity: 0.9;
+}
+
+#result {
+  font-size: 1.4em;
+  color: #4fc3f7;
+}
+
+/* Input + bouton */
+.input-group {
+  display: flex;
+  gap: 10px;
+}
+
+input {
+  flex: 1;
+  padding: 10px;
+  border-radius: 10px;
+  border: none;
+  outline: none;
+}
+
+button {
+  padding: 10px 15px;
+  border-radius: 10px;
+  border: none;
+  background: #4fc3f7;
+  color: black;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #81d4fa;
+}
+
+/* Liste */
+ul {
+  list-style: none;
+  padding: 0;
+  margin-top: 20px;
+}
+
+li {
+  background: rgba(0, 0, 0, 0.35);
+  padding: 12px;
+  margin-bottom: 10px;
+  border-radius: 12px;
+  cursor: pointer;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  animation: pop 0.25s ease;
+  transition: transform 0.15s, background 0.15s;
+}
+
+li:hover {
+  transform: scale(1.04);
+  background: rgba(0, 0, 0, 0.5);
+}
+
+}hr {
+  margin: 30px 0;
+  border: none;
+  height: 1px;
+  background: rgba(255,255,255,0.2);
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 10px;
+}
+/* Animation d’apparition */
+@keyframes pop {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+li {
+  animation: pop 0.25s ease;
+}
+
+/* Version téléphone */
+/* 📱 Version téléphone */
+@media (max-width: 500px) {
+
+  body {
+    padding: 10px;
+  }
+
+  .app {
+    width: 90%;
+    padding: 20px;
+    border-radius: 15px;
+  }
+
+  .input-group {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  input,
+  button {
+    width: 100%;
+    font-size: 16px;
+  }
+
+  button {
+    padding: 12px;
+  }
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+  <h1>📝 Ma To-Do List</h1>
+
+  <div class="input-group">
+    <input id="task" placeholder="Nouvelle tâche">
+    <button onclick="addTask()">Ajouter</button>
+  </div>
+
+  <ul id="list"></ul>
+<hr>
+
+<h2>📊 Calcul de moyenne</h2>
+
+<div class="input-group">
+  <input id="note" type="number" placeholder="Note">
+  <button type="button" onclick="addNote()">Ajouter</button>
+
+</div>
+
+<ul id="notes"></ul>
+
+<p>Moyenne : <strong><span id="result">-</span></strong></p>
+
+</div>
+
+
+<script>
+let list = document.getElementById("list");
+
+// Charger les tâches sauvegardées
+let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+
+tasks.forEach(task => createTask(task));
+
+function addTask() {
+  let input = document.getElementById("task");
+  let text = input.value;
+  if (text === "") return;
+
+  tasks.push(text);
+  saveTasks();
+  createTask(text);
+
+  input.value = "";
+}
+
+function createTask(text) {
+  let li = document.createElement("li");
+  li.textContent = text;
+
+  li.onclick = function () {
+    tasks = tasks.filter(t => t !== text);
+    saveTasks();
+    li.remove();
+  };
+
+  list.appendChild(li);
+}
+
+function saveTasks() {
+  localStorage.setItem("tasks", JSON.stringify(tasks));
+}
+
+let notesList = document.getElementById("notes");
+let result = document.getElementById("result");
+
+// Charger les notes sauvegardées
+let notes = JSON.parse(localStorage.getItem("notes")) || [];
+
+// Afficher les notes déjà sauvegardées
+notes.forEach(n => createNote(n));
+updateAverage();
+
+function addNote() {
+  let input = document.getElementById("note");
+  let value = input.value;
+  if (value === "") return;
+
+  let n = Number(value);
+  notes.push(n);
+  saveNotes();
+  createNote(n);
+  updateAverage();
+
+  input.value = "";
+}
+
+function createNote(n) {
+  let li = document.createElement("li");
+  li.textContent = n;
+
+  // Supprimer la note au clic
+  li.onclick = function () {
+    notes = notes.filter(x => x !== n);
+    saveNotes();
+    li.remove();
+    updateAverage();
+  };
+
+  notesList.appendChild(li);
+}
+
+function updateAverage() {
+  if (notes.length === 0) {
+    result.textContent = "-";
+    return;
+  }
+
+  let sum = 0;
+  for (let i = 0; i < notes.length; i++) {
+    sum += notes[i];
+  }
+
+  result.textContent = (sum / notes.length).toFixed(2);
+}
+
+function saveNotes() {
+  localStorage.setItem("notes", JSON.stringify(notes));
+}
+
+</script>
+
+</body>
+
+</html>
