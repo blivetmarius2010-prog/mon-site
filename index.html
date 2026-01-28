@@ -333,6 +333,10 @@ function addTask() {
 
   tasks.push(text);
   saveTasks();
+    function saveNotes() {
+  localStorage.setItem("notes", JSON.stringify(notes));
+}
+
   createTask(text);
 
   input.value = "";
@@ -451,6 +455,7 @@ if (localStorage.getItem("theme") === "light") {
 </body>
 
 </html>
+
 
 
 
