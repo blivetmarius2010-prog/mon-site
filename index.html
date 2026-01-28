@@ -9,92 +9,107 @@
 <meta name="theme-color" content="#020617">
 
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
+* { box-sizing: border-box; margin: 0; padding: 0; }
 
-body{
-  min-height:100vh;
-  font-family:Segoe UI,system-ui,sans-serif;
-  color:white;
+body {
+  min-height: 100vh;
+  font-family: "Segoe UI", system-ui, sans-serif;
+  color: white;
   background:
     radial-gradient(circle at top, rgba(56,189,248,0.15), transparent 40%),
-    linear-gradient(180deg,#020617,#020617);
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  transition:.4s;
-}
-body.light{
-  color:#020617;
-  background:linear-gradient(180deg,#f8fafc,#e5e7eb);
+    radial-gradient(circle at bottom, rgba(129,140,248,0.2), transparent 40%),
+    linear-gradient(180deg, #020617, #020617);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.app{
-  width:380px;
-  padding:28px;
-  border-radius:28px;
-  background:rgba(255,255,255,.12);
-  backdrop-filter:blur(20px);
-  box-shadow:0 30px 80px rgba(0,0,0,.6);
-  animation:appear .8s ease;
-}
-@keyframes appear{
-  from{opacity:0;transform:translateY(40px)}
-  to{opacity:1;transform:none}
+body.light {
+  color: #020617;
+  background:
+    radial-gradient(circle at top, rgba(56,189,248,0.35), transparent 45%),
+    linear-gradient(180deg, #f8fafc, #e5e7eb);
 }
 
-header{text-align:center;margin-bottom:25px}
-header h1{font-size:2em}
-header p{opacity:.8}
-
-section{margin-top:25px}
-section h2{margin-bottom:10px}
-
-input,select{
-  width:100%;
-  padding:12px;
-  border-radius:14px;
-  border:none;
-  margin-bottom:8px;
+.app {
+  width: 380px;
+  padding: 28px;
+  border-radius: 28px;
+  background: rgba(255,255,255,0.12);
+  backdrop-filter: blur(20px);
+  box-shadow: 0 30px 80px rgba(0,0,0,0.6);
 }
 
-button{
-  width:100%;
-  padding:12px;
-  border-radius:14px;
-  border:none;
-  font-weight:bold;
-  background:linear-gradient(135deg,#38bdf8,#818cf8);
-  cursor:pointer;
+h1 { text-align: center; margin-bottom: 20px; }
+
+section { margin-top: 25px; }
+
+input {
+  width: 100%;
+  padding: 12px;
+  border-radius: 14px;
+  border: none;
+  margin-bottom: 10px;
 }
 
-ul{list-style:none}
-li{
-  background:rgba(0,0,0,.35);
-  padding:14px;
-  margin-bottom:8px;
-  border-radius:14px;
-  cursor:pointer;
-  transition:.15s;
-}
-li:hover{transform:scale(1.04)}
-
-.stats{
-  margin-top:10px;
-  background:rgba(0,0,0,.25);
-  padding:12px;
-  border-radius:14px;
+button {
+  width: 100%;
+  padding: 12px;
+  border-radius: 14px;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+  background: linear-gradient(135deg, #38bdf8, #818cf8);
+  color: #020617;
 }
 
-.theme-btn{
-  position:fixed;
-  top:16px;
-  right:16px;
-  width:44px;
-  height:44px;
-  border-radius:50%;
-  border:none;
-  background:rgba(255,255,255,.25);
-  font-size:18px;
+ul { list-style: none; margin-top: 10px; }
+
+li {
+  background: rgba(0,0,0,0.35);
+  padding: 12px;
+  margin-bottom: 10px;
+  border-radius: 14px;
+}
+
+.subject {
+  margin-top: 15px;
+  padding: 12px;
+  background: rgba(0,0,0,0.25);
+  border-radius: 16px;
+}
+
+.subject-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.delete {
+  background: #ef4444;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 4px 8px;
+  cursor: pointer;
+}
+
+.stats {
+  margin-top: 12px;
+  font-size: 0.9em;
+}
+
+.theme-btn {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255,255,255,0.25);
+  font-size: 18px;
 }
 </style>
 </head>
@@ -104,30 +119,26 @@ li:hover{transform:scale(1.04)}
 <button class="theme-btn" onclick="toggleTheme()">🌙</button>
 
 <div class="app">
+<h1>🎓 Student Hub</h1>
 
-<header>
-  <h1>🎓 Student Hub</h1>
-  <p>Organisation & Moyennes</p>
-</header>
-
-<!-- TODO -->
+<!-- TO DO LIST -->
 <section>
-<h2>📝 Tâches</h2>
-<input id="taskInput" placeholder="Nouvelle tâche">
-<button onclick="addTask()">Ajouter</button>
-<ul id="tasks"></ul>
+  <h2>📝 Tâches</h2>
+  <input id="taskInput" placeholder="Nouvelle tâche">
+  <button onclick="addTask()">Ajouter</button>
+  <ul id="tasks"></ul>
 </section>
 
-<!-- SUBJECTS -->
+<!-- MATIÈRES -->
 <section>
-<h2>📚 Matières</h2>
-<input id="subjectInput" placeholder="Nouvelle matière">
-<button onclick="addSubject()">Ajouter matière</button>
-<div id="subjects"></div>
+  <h2>📚 Matières & Notes</h2>
+  <input id="subjectInput" placeholder="Nouvelle matière">
+  <button onclick="addSubject()">Ajouter matière</button>
+  <div id="subjects"></div>
 
-<div class="stats">
-  <p>📊 Moyenne générale : <strong><span id="globalAvg">-</span></strong></p>
-</div>
+  <div class="stats">
+    <p>📊 Moyenne générale : <strong><span id="globalAvg">-</span></strong></p>
+  </div>
 </section>
 
 </div>
@@ -139,113 +150,154 @@ let subjects = JSON.parse(localStorage.getItem("subjects")) || [];
 
 /* ===== TASKS ===== */
 const taskList = document.getElementById("tasks");
-tasks.forEach(t=>createTask(t));
+tasks.forEach(createTask);
 
 function addTask(){
-  let i=document.getElementById("taskInput");
-  if(!i.value)return;
+  let i = taskInput;
+  if(!i.value) return;
   tasks.push(i.value);
   save();
   createTask(i.value);
-  i.value="";
+  i.value = "";
 }
+
 function createTask(text){
-  let li=document.createElement("li");
-  li.textContent="✅ "+text;
-  li.onclick=()=>{tasks=tasks.filter(t=>t!==text);save();li.remove()}
+  let li = document.createElement("li");
+  li.textContent = "✅ " + text;
+  li.onclick = () => {
+    tasks = tasks.filter(t => t !== text);
+    save();
+    li.remove();
+  };
   taskList.appendChild(li);
 }
 
 /* ===== SUBJECTS ===== */
-const subjectBox=document.getElementById("subjects");
-subjects.forEach(s=>renderSubject(s));
+const subjectsDiv = document.getElementById("subjects");
+
+subjects.forEach(renderSubject);
 updateGlobal();
 
 function addSubject(){
-  let i=document.getElementById("subjectInput");
-  if(!i.value)return;
-  subjects.push({name:i.value,notes:[]});
+  let i = subjectInput;
+  if(!i.value) return;
+
+  let subject = { name: i.value, notes: [] };
+  subjects.push(subject);
   save();
-  renderSubject(subjects.at(-1));
-  i.value="";
+  renderSubject(subject);
+  updateGlobal();
+  i.value = "";
 }
 
-function renderSubject(s){
-  let div=document.createElement("div");
-  div.className="stats";
+function renderSubject(subject){
+  let box = document.createElement("div");
+  box.className = "subject";
 
-  div.innerHTML=`
-    <strong>${s.name}</strong>
-    <input type="number" min="1" max="6" placeholder="Note (1-6)">
-    <button>Ajouter note</button>
-    <ul></ul>
-    <p>Moyenne : <span>-</span></p>
-  `;
+  let header = document.createElement("div");
+  header.className = "subject-header";
 
-  const input=div.querySelector("input");
-  const ul=div.querySelector("ul");
-  const avgSpan=div.querySelector("span");
+  let title = document.createElement("strong");
+  title.textContent = subject.name;
 
-  s.notes.forEach(n=>addNoteLi(n));
-
-  div.querySelector("button").onclick=()=>{
-    let n=Number(input.value);
-    if(n<1||n>6)return;
-    s.notes.push(n);
+  let del = document.createElement("button");
+  del.textContent = "✖";
+  del.className = "delete";
+  del.onclick = () => {
+    subjects = subjects.filter(s => s !== subject);
     save();
-    addNoteLi(n);
-    updateAvg();
+    box.remove();
     updateGlobal();
-    input.value="";
   };
 
-  function addNoteLi(n){
-    let li=document.createElement("li");
-    li.textContent=n;
-    li.onclick=()=>{
-      s.notes=s.notes.filter(x=>x!==n);
-      save();
-      li.remove();
-      updateAvg();
-      updateGlobal();
-    };
-    ul.appendChild(li);
+  header.appendChild(title);
+  header.appendChild(del);
+
+  let input = document.createElement("input");
+  input.type = "number";
+  input.min = 1;
+  input.max = 6;
+  input.placeholder = "Note (1 à 6)";
+
+  let btn = document.createElement("button");
+  btn.textContent = "Ajouter note";
+
+  let ul = document.createElement("ul");
+  let avg = document.createElement("p");
+
+  btn.onclick = () => {
+    let n = Number(input.value);
+    if(n < 1 || n > 6) return;
+    subject.notes.push(n);
+    save();
+    updateSubject();
+    input.value = "";
+  };
+
+  function updateSubject(){
+    ul.innerHTML = "";
+    subject.notes.forEach(n => {
+      let li = document.createElement("li");
+      li.textContent = n;
+      li.onclick = () => {
+        subject.notes = subject.notes.filter(x => x !== n);
+        save();
+        updateSubject();
+        updateGlobal();
+      };
+      ul.appendChild(li);
+    });
+
+    if(subject.notes.length === 0){
+      avg.textContent = "Moyenne : -";
+    } else {
+      let m = subject.notes.reduce((a,b)=>a+b,0)/subject.notes.length;
+      avg.textContent = "Moyenne : " + m.toFixed(2);
+    }
+    updateGlobal();
   }
 
-  function updateAvg(){
-    if(!s.notes.length){avgSpan.textContent="-";return;}
-    avgSpan.textContent=(s.notes.reduce((a,b)=>a+b)/s.notes.length).toFixed(2);
-  }
-  updateAvg();
-  subjectBox.appendChild(div);
+  updateSubject();
+
+  box.append(header, input, btn, ul, avg);
+  subjectsDiv.appendChild(box);
 }
 
+/* ===== GLOBAL AVG ===== */
 function updateGlobal(){
-  let all=[];
-  subjects.forEach(s=>all.push(...s.notes));
-  document.getElementById("globalAvg").textContent=
-    all.length?(all.reduce((a,b)=>a+b)/all.length).toFixed(2):"-";
+  let all = subjects.flatMap(s => s.notes);
+  globalAvg.textContent = all.length
+    ? (all.reduce((a,b)=>a+b,0)/all.length).toFixed(2)
+    : "-";
 }
 
 /* ===== THEME ===== */
 function toggleTheme(){
   document.body.classList.toggle("light");
-  localStorage.setItem("theme",document.body.classList.contains("light")?"light":"dark");
+  localStorage.setItem("theme",
+    document.body.classList.contains("light") ? "light" : "dark"
+  );
 }
-if(localStorage.getItem("theme")==="light")document.body.classList.add("light");
+if(localStorage.getItem("theme")==="light"){
+  document.body.classList.add("light");
+}
 
 /* ===== SAVE ===== */
 function save(){
-  localStorage.setItem("tasks",JSON.stringify(tasks));
-  localStorage.setItem("subjects",JSON.stringify(subjects));
+  localStorage.setItem("tasks", JSON.stringify(tasks));
+  localStorage.setItem("subjects", JSON.stringify(subjects));
 }
 
 /* ===== PWA ===== */
-if("serviceWorker"in navigator){navigator.serviceWorker.register("sw.js")}
+if("serviceWorker" in navigator){
+  navigator.serviceWorker.register("sw.js");
+}
 </script>
 
 </body>
 </html>
+
+
 
 
 
