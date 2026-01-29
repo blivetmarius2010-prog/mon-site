@@ -5,32 +5,26 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Student Hub</title>
 
-<link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#020617">
 
 <style>
-/* ===== RESET ===== */
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
 
-/* ===== BACKGROUND ===== */
 body {
   min-height: 100vh;
-  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+  font-family: "Segoe UI", system-ui, sans-serif;
   color: white;
-
   background:
-    radial-gradient(circle at 20% 10%, rgba(56,189,248,0.18), transparent 40%),
-    radial-gradient(circle at 80% 90%, rgba(129,140,248,0.22), transparent 45%),
+    radial-gradient(circle at top, rgba(56,189,248,0.15), transparent 40%),
     linear-gradient(180deg, #020617, #020617);
-
   display: flex;
   justify-content: center;
   align-items: center;
-  transition: background 0.4s, color 0.4s;
+  transition: 0.4s;
 }
 
 body.light {
@@ -40,172 +34,94 @@ body.light {
     linear-gradient(180deg, #f8fafc, #e5e7eb);
 }
 
-/* ===== MAIN CARD ===== */
 .app {
   width: 380px;
-  padding: 26px;
-  border-radius: 30px;
-
-  background: linear-gradient(
-    180deg,
-    rgba(255,255,255,0.16),
-    rgba(255,255,255,0.06)
-  );
-
-  backdrop-filter: blur(22px);
-  box-shadow:
-    0 40px 90px rgba(0,0,0,0.65),
-    inset 0 1px 1px rgba(255,255,255,0.3);
-
-  animation: appear 0.9s ease;
+  padding: 28px;
+  border-radius: 28px;
+  background: rgba(255,255,255,0.12);
+  backdrop-filter: blur(20px);
+  box-shadow: 0 30px 80px rgba(0,0,0,0.6);
 }
 
-@keyframes appear {
-  from {
-    opacity: 0;
-    transform: translateY(40px) scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-/* ===== HEADER ===== */
-header {
+h1 {
   text-align: center;
-  margin-bottom: 22px;
+  margin-bottom: 20px;
 }
 
-header h1 {
-  font-size: 2em;
-  letter-spacing: 0.5px;
-}
-
-header p {
-  opacity: 0.8;
-  font-size: 0.95em;
-}
-
-/* ===== SECTIONS ===== */
 section {
   margin-top: 22px;
-  padding: 16px;
-  border-radius: 20px;
-  background: rgba(0,0,0,0.28);
 }
 
-body.light section {
-  background: rgba(255,255,255,0.7);
-}
-
-/* ===== TITLES ===== */
-section h2 {
-  font-size: 1.15em;
+h2 {
   margin-bottom: 10px;
 }
 
-/* ===== INPUTS ===== */
 input, select {
   width: 100%;
-  padding: 13px;
+  padding: 12px;
   border-radius: 14px;
   border: none;
-  outline: none;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
   font-size: 1em;
 }
 
-/* ===== BUTTONS ===== */
 button {
   width: 100%;
-  padding: 13px;
+  padding: 12px;
   border-radius: 14px;
   border: none;
   font-weight: bold;
   cursor: pointer;
-
   background: linear-gradient(135deg, #38bdf8, #818cf8);
-  color: #020617;
-
-  transition: transform 0.15s, box-shadow 0.15s;
+  margin-bottom: 10px;
 }
 
-button:hover {
-  transform: scale(1.04);
-  box-shadow: 0 14px 35px rgba(56,189,248,0.55);
-}
-
-button:active {
-  transform: scale(0.98);
-}
-
-/* ===== LISTS ===== */
 ul {
   list-style: none;
-  margin-top: 8px;
 }
 
 li {
   background: rgba(0,0,0,0.35);
-  padding: 13px 14px;
+  padding: 12px;
   margin-bottom: 8px;
   border-radius: 14px;
-
   display: flex;
   justify-content: space-between;
   align-items: center;
-
-  cursor: pointer;
-  animation: pop 0.25s ease;
 }
 
 li span {
-  opacity: 0.6;
-  font-size: 0.9em;
+  cursor: pointer;
 }
 
-li:hover {
-  background: rgba(0,0,0,0.55);
-}
-
-@keyframes pop {
-  from { opacity: 0; transform: scale(0.9); }
-  to { opacity: 1; transform: scale(1); }
-}
-
-/* ===== STATS ===== */
 .stats {
-  margin-top: 10px;
-  padding: 12px;
-  border-radius: 14px;
-  background: rgba(0,0,0,0.3);
+  margin-top: 12px;
+  background: rgba(0,0,0,0.25);
+  padding: 14px;
+  border-radius: 16px;
   font-size: 0.95em;
 }
 
-.stats p {
-  margin: 4px 0;
+.avg-value {
+  font-size: 1.6em;
+  font-weight: bold;
+  text-align: center;
 }
 
-/* ===== THEME BUTTON ===== */
+.avg-red { color: #ef4444; }
+.avg-orange { color: #f59e0b; }
+.avg-green { color: #22c55e; }
+
 .theme-btn {
   position: fixed;
-  top: 16px;
-  right: 16px;
+  top: 15px;
+  right: 15px;
   width: 44px;
   height: 44px;
   border-radius: 50%;
   border: none;
   font-size: 18px;
-  background: rgba(255,255,255,0.25);
   cursor: pointer;
-}
-
-/* ===== MOBILE ===== */
-@media (max-width: 500px) {
-  .app {
-    width: 92%;
-  }
 }
 </style>
 </head>
@@ -216,10 +132,7 @@ li:hover {
 
 <div class="app">
 
-<header>
-  <h1>🎓 Student Hub</h1>
-  <p>Organisation • Notes • Progression</p>
-</header>
+<h1>🎓 Student Hub</h1>
 
 <section>
   <h2>📝 Tâches</h2>
@@ -232,7 +145,7 @@ li:hover {
   <h2>📚 Matières</h2>
   <input id="subjectInput" placeholder="Nom de la matière">
   <button onclick="addSubject()">Ajouter la matière</button>
-  <ul id="subjects"></ul>
+  <ul id="subjectsList"></ul>
 </section>
 
 <section>
@@ -240,13 +153,18 @@ li:hover {
   <select id="subjectSelect"></select>
   <input id="noteInput" type="number" min="1" max="6" placeholder="Note (1 à 6)">
   <button onclick="addNote()">Ajouter la note</button>
-<ul id="notesList"></ul>
+  <ul id="notesList"></ul>
 
   <div class="stats">
-    <p>📌 Nombre : <strong id="count">0</strong></p>
-    <p>📈 Moyenne : <strong id="avg">-</strong></p>
-    <p>⬆️ Max : <strong id="max">-</strong></p>
-    <p>⬇️ Min : <strong id="min">-</strong></p>
+    <p>📌 Nombre : <span id="count">0</span></p>
+    <p>📈 Moyenne : <span id="avg">-</span></p>
+    <p>⬆️ Max : <span id="max">-</span></p>
+    <p>⬇️ Min : <span id="min">-</span></p>
+  </div>
+
+  <div class="stats">
+    <p>🎓 Moyenne générale</p>
+    <p id="globalAvg" class="avg-value">-</p>
   </div>
 </section>
 
@@ -255,140 +173,149 @@ li:hover {
 <script>
 let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
 let subjects = JSON.parse(localStorage.getItem("subjects")) || {};
-let theme = localStorage.getItem("theme");
 
 const taskList = document.getElementById("tasks");
-const subjectList = document.getElementById("subjects");
 const subjectSelect = document.getElementById("subjectSelect");
+const subjectsList = document.getElementById("subjectsList");
+const notesList = document.getElementById("notesList");
 
-tasks.forEach(t => createTask(t));
-Object.keys(subjects).forEach(s => createSubject(s));
-updateSelect();
-
-function addTask() {
-  let input = taskInput;
-  if (!input.value) return;
-  tasks.push(input.value);
-  save();
-  createTask(input.value);
-  input.value = "";
-}
-
-function createTask(text) {
-  let li = document.createElement("li");
-  li.innerHTML = `${text} <span>✖</span>`;
-  li.onclick = () => {
-    tasks = tasks.filter(t => t !== text);
-    save();
-    li.remove();
-  };
-  taskList.appendChild(li);
-}
-
-function addSubject() {
-  let name = subjectInput.value;
-  if (!name || subjects[name]) return;
-  subjects[name] = [];
-  save();
-  createSubject(name);
-  updateSelect();
-  subjectInput.value = "";
-}
-
-function createSubject(name) {
-  let li = document.createElement("li");
-  li.innerHTML = `${name} <span>✖</span>`;
-  li.onclick = () => {
-    delete subjects[name];
-    save();
-    li.remove();
-    updateSelect();
-    updateStats();
-  };
-  subjectList.appendChild(li);
-}
-
-function updateSelect() {
-  subjectSelect.innerHTML = "";
-  Object.keys(subjects).forEach(s => {
-    let opt = document.createElement("option");
-    opt.value = s;
-    opt.textContent = s;
-    subjectSelect.appendChild(opt);
-  });
-}
-
-function addNote() {
-  let subject = subjectSelect.value;
-  let n = Number(noteInput.value);
-
-  if (!subject || n < 1 || n > 6) return;
-
-  subjects[subject].push(n);
-  save();
-  renderNotes();
-  updateStats();
-
-  noteInput.value = "";
-}
-
-
-function updateStats() {
-  let s = subjectSelect.value;
-
-  if (!s || subjects[s].length === 0) {
-    count.textContent = avg.textContent = max.textContent = min.textContent = "-";
-    notesList.innerHTML = "";
-    return;
-  }
-
-  let arr = subjects[s];
-  count.textContent = arr.length;
-  avg.textContent = (arr.reduce((a,b)=>a+b,0)/arr.length).toFixed(2);
-  max.textContent = Math.max(...arr);
-  min.textContent = Math.min(...arr);
-
-  renderNotes(); // ✅ ICI C’EST LE POINT 4
-}
+tasks.forEach(createTask);
+Object.keys(subjects).forEach(createSubject);
+updateSubjectSelect();
 
 function save() {
   localStorage.setItem("tasks", JSON.stringify(tasks));
   localStorage.setItem("subjects", JSON.stringify(subjects));
 }
 
-function toggleTheme() {
-  document.body.classList.toggle("light");
-  localStorage.setItem("theme", document.body.classList.contains("light") ? "light" : "dark");
+function addTask() {
+  let input = document.getElementById("taskInput");
+  if (!input.value) return;
+  tasks.push(input.value);
+  createTask(input.value);
+  save();
+  input.value = "";
 }
 
-if (theme === "light") document.body.classList.add("light");
-  const notesList = document.getElementById("notesList");
+function createTask(text) {
+  let li = document.createElement("li");
+  li.innerHTML = `<span>${text}</span>`;
+  li.onclick = () => {
+    tasks = tasks.filter(t => t !== text);
+    li.remove();
+    save();
+  };
+  taskList.appendChild(li);
+}
 
-function renderNotes() {
-  notesList.innerHTML = "";
-  let subject = subjectSelect.value;
-  if (!subject || !subjects[subject]) return;
+function addSubject() {
+  let input = document.getElementById("subjectInput");
+  if (!input.value || subjects[input.value]) return;
+  subjects[input.value] = [];
+  createSubject(input.value);
+  updateSubjectSelect();
+  save();
+  input.value = "";
+}
 
-  subjects[subject].forEach((note, index) => {
-    let li = document.createElement("li");
-    li.innerHTML = `
-      Note : <strong>${note}</strong>
-      <span style="opacity:0.6; cursor:pointer;">❌</span>
-    `;
+function createSubject(name) {
+  let li = document.createElement("li");
+  li.innerHTML = `<span>${name}</span> ❌`;
+  li.onclick = () => {
+    delete subjects[name];
+    li.remove();
+    updateSubjectSelect();
+    notesList.innerHTML = "";
+    updateStats();
+    updateGlobalAverage();
+    save();
+  };
+  subjectsList.appendChild(li);
+}
 
-    li.onclick = () => {
-      subjects[subject].splice(index, 1);
-      save();
-      renderNotes();
-      updateStats();
-    };
-
-    notesList.appendChild(li);
+function updateSubjectSelect() {
+  subjectSelect.innerHTML = `<option value="">Choisir une matière</option>`;
+  Object.keys(subjects).forEach(s => {
+    let o = document.createElement("option");
+    o.value = s;
+    o.textContent = s;
+    subjectSelect.appendChild(o);
   });
 }
 
+function addNote() {
+  let s = subjectSelect.value;
+  let v = Number(noteInput.value);
+  if (!s || v < 1 || v > 6) return;
+  subjects[s].push(v);
+  createNote(v);
+  updateStats();
+  updateGlobalAverage();
+  save();
+  noteInput.value = "";
+}
+
+function createNote(n) {
+  let li = document.createElement("li");
+  li.textContent = n;
+  notesList.appendChild(li);
+}
+
+subjectSelect.onchange = () => {
+  notesList.innerHTML = "";
+  let s = subjectSelect.value;
+  if (!s) return;
+  subjects[s].forEach(createNote);
+  updateStats();
+};
+
+function updateStats() {
+  let s = subjectSelect.value;
+  if (!s || subjects[s].length === 0) {
+    count.textContent = avg.textContent = max.textContent = min.textContent = "-";
+    return;
+  }
+  let arr = subjects[s];
+  count.textContent = arr.length;
+  avg.textContent = (arr.reduce((a,b)=>a+b,0)/arr.length).toFixed(2);
+  max.textContent = Math.max(...arr);
+  min.textContent = Math.min(...arr);
+}
+
+function updateGlobalAverage() {
+  let all = [];
+  Object.values(subjects).forEach(a => all = all.concat(a));
+  let el = document.getElementById("globalAvg");
+
+  if (all.length === 0) {
+    el.textContent = "-";
+    el.className = "avg-value";
+    return;
+  }
+
+  let avg = all.reduce((a,b)=>a+b,0)/all.length;
+  el.textContent = avg.toFixed(2);
+  el.className = "avg-value";
+
+  if (avg < 4) el.classList.add("avg-red");
+  else if (avg < 4.5) el.classList.add("avg-orange");
+  else el.classList.add("avg-green");
+}
+
+function toggleTheme() {
+  document.body.classList.toggle("light");
+  localStorage.setItem("theme",
+    document.body.classList.contains("light") ? "light" : "dark"
+  );
+}
+
+if (localStorage.getItem("theme") === "light") {
+  document.body.classList.add("light");
+}
 </script>
 
 </body>
 </html>
+
+
 
