@@ -240,6 +240,7 @@ li:hover {
   <select id="subjectSelect"></select>
   <input id="noteInput" type="number" min="1" max="6" placeholder="Note (1 à 6)">
   <button onclick="addNote()">Ajouter la note</button>
+<ul id="notesList"></ul>
 
   <div class="stats">
     <p>📌 Nombre : <strong id="count">0</strong></p>
@@ -318,26 +319,36 @@ function updateSelect() {
 }
 
 function addNote() {
-  let s = subjectSelect.value;
+  let subject = subjectSelect.value;
   let n = Number(noteInput.value);
-  if (!s || n < 1 || n > 6) return;
-  subjects[s].push(n);
+
+  if (!subject || n < 1 || n > 6) return;
+
+  subjects[subject].push(n);
   save();
+  renderNotes();
   updateStats();
+
   noteInput.value = "";
 }
 
+
 function updateStats() {
   let s = subjectSelect.value;
+
   if (!s || subjects[s].length === 0) {
     count.textContent = avg.textContent = max.textContent = min.textContent = "-";
+    notesList.innerHTML = "";
     return;
   }
+
   let arr = subjects[s];
   count.textContent = arr.length;
   avg.textContent = (arr.reduce((a,b)=>a+b,0)/arr.length).toFixed(2);
   max.textContent = Math.max(...arr);
   min.textContent = Math.min(...arr);
+
+  renderNotes(); // ✅ ICI C’EST LE POINT 4
 }
 
 function save() {
@@ -351,7 +362,33 @@ function toggleTheme() {
 }
 
 if (theme === "light") document.body.classList.add("light");
+  const notesList = document.getElementById("notesList");
+
+function renderNotes() {
+  notesList.innerHTML = "";
+  let subject = subjectSelect.value;
+  if (!subject || !subjects[subject]) return;
+
+  subjects[subject].forEach((note, index) => {
+    let li = document.createElement("li");
+    li.innerHTML = `
+      Note : <strong>${note}</strong>
+      <span style="opacity:0.6; cursor:pointer;">❌</span>
+    `;
+
+    li.onclick = () => {
+      subjects[subject].splice(index, 1);
+      save();
+      renderNotes();
+      updateStats();
+    };
+
+    notesList.appendChild(li);
+  });
+}
+
 </script>
 
 </body>
 </html>
+
